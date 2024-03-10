@@ -1,13 +1,13 @@
 {
-  "name": "@spautz/package-template-workspace",
+  "name": "@spautz/microfrontend-template-workspace",
   "private": true,
   "description": "My opinionated template for a npm library repo",
   "license": "MIT",
-  "homepage": "https://github.com/spautz/package-template#readme",
-  "bugs": "https://github.com/spautz/package-template/issues",
+  "homepage": "https://github.com/spautz/microfrontend-template#readme",
+  "bugs": "https://github.com/spautz/microfrontend-template/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spautz/package-template.git"
+    "url": "https://github.com/spautz/microfrontend-template.git"
   },
   "author": {
     "name": "Steven Pautz",
