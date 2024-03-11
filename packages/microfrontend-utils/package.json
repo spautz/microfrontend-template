@@ -1,15 +1,15 @@
 {
-  "name": "@spautz/node-library-template",
+  "name": "@spautz/microfrontend-utils",
   "version": "0.0.1",
   "description": "My opinionated template for a NodeJS library",
   "keywords": [],
   "license": "MIT",
-  "homepage": "https://github.com/spautz/package-template/blob/main/packages/node-library-template#readme",
+  "homepage": "https://github.com/spautz/package-template/blob/main/packages/microfrontend-utils#readme",
   "bugs": "https://github.com/spautz/package-template/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/spautz/package-template.git",
-    "directory": "packages/node-library-template"
+    "directory": "packages/microfrontend-utils"
   },
   "author": {
     "name": "Steven Pautz",

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { helloWorld } from '@spautz/node-library-template';
+import { helloWorld } from '../../microfrontend-utils';
 
 export interface TodoComponentProps {
   children?: ReactNode;

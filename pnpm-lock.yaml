@@ -148,13 +148,13 @@ importers:
         specifier: 5.1.6
         version: 5.1.6
 
-  packages/node-library-template: {}
+  packages/microfrontend-utils: {}
 
-  packages/react-library-template:
+  packages/microfrontend-app-sdk:
     dependencies:
-      '@spautz/node-library-template':
+      '@spautz/microfrontend-utils':
         specifier: workspace:^
-        version: link:../node-library-template
+        version: link:../microfrontend-utils
       react:
         specifier: ^16.9.0 || ^17 || ^18
         version: 18.2.0

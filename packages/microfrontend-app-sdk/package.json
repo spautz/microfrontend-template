@@ -1,15 +1,15 @@
 {
-  "name": "@spautz/react-library-template",
+  "name": "@spautz/microfrontend-app-sdk",
   "version": "0.0.1",
   "description": "My opinionated template for a React package",
   "keywords": [],
   "license": "MIT",
-  "homepage": "https://github.com/spautz/package-template/blob/main/packages/react-library-template#readme",
+  "homepage": "https://github.com/spautz/package-template/blob/main/packages/microfrontend-app-sdk#readme",
   "bugs": "https://github.com/spautz/package-template/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/spautz/package-template.git",
-    "directory": "packages/react-library-template"
+    "directory": "packages/microfrontend-app-sdk"
   },
   "author": {
     "name": "Steven Pautz",
@@ -85,7 +85,7 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@spautz/node-library-template": "workspace:^"
+    "@spautz/microfrontend-utils": "workspace:^"
   },
   "devDependencies": {},
   "peerDependencies": {

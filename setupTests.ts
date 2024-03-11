@@ -1,1 +1,1 @@
-import './packages/react-library-template/setupTests.ts';
+import './packages/microfrontend-app-sdk/setupTests.ts';
