@@ -1,7 +1,7 @@
 {
   "name": "@spautz/microfrontend-utils",
   "version": "0.0.1",
-  "description": "My opinionated template for a NodeJS library",
+  "description": "Tools to support microfrontend development",
   "keywords": [],
   "license": "MIT",
   "homepage": "https://github.com/spautz/package-template/blob/main/packages/microfrontend-utils#readme",
@@ -41,7 +41,7 @@
         "default": "./dist/cjs/index.cjs"
       }
     },
-    "./internal-raw-src": "./src/index.ts",
+    "./__internal-raw-src__": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "main": "./dist/cjs/index.cjs",

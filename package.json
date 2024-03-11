@@ -1,7 +1,7 @@
 {
   "name": "@spautz/microfrontend-template-workspace",
   "private": true,
-  "description": "My opinionated template for a npm library repo",
+  "description": "Template, repo setup, and general-use utils for microfrontends",
   "license": "MIT",
   "homepage": "https://github.com/spautz/microfrontend-template#readme",
   "bugs": "https://github.com/spautz/microfrontend-template/issues",
@@ -26,7 +26,7 @@
     "husky:precommit": "lint-staged",
     "husky:prepush": "pnpm run format:verify && pnpm run typecheck && pnpm run lint",
     "____ BATCH COMMANDS FOR PACKAGES ___________________________________": "",
-    "packages:prepare": "pnpm run clean && pnpm run packages:yalc-publish",
+    "packages:prepare": "pnpm run clean && pnpm -r --filter \"./packages/*\" run build",
     "packages:clean": "pnpm --parallel -r run clean",
     "packages:build": "pnpm -r run build",
     "packages:lint": "pnpm -r run lint",

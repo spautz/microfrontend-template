@@ -1,14 +1,14 @@
 {
-  "name": "@spautz/demo--hello-world-ui",
+  "name": "@spautz/demo--host-app-vite",
   "private": true,
-  "description": "Basic demo of package-template libraries",
+  "description": "Basic host app, to demo the microfrontend",
   "license": "MIT",
-  "homepage": "https://github.com/spautz/package-template/blob/main/demos/hello-world-ui",
-  "bugs": "https://github.com/spautz/package-template/issues",
+  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/demos/host-app-vite",
+  "bugs": "https://github.com/spautz/microfrontend-template/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/spautz/package-template.git",
-    "directory": "packages/hello-world-ui"
+    "url": "https://github.com/spautz/microfrontend-template.git",
+    "directory": "packages/host-app-vite"
   },
   "author": {
     "name": "Steven Pautz",
@@ -17,8 +17,7 @@
   "source": "./src/main.tsx",
   "type": "module",
   "imports": {
-    "#spautz/node-library-template": "@spautz/node-library-template/internal-raw-src",
-    "#spautz/react-library-template": "@spautz/react-library-template/internal-raw-src"
+    "#spautz/microfrontend-app-sdk": "@spautz/microfrontend-app-sdk/__internal-raw-src__"
   },
   "scripts": {
     "____ INTEGRATION ___________________________________________________": "",
@@ -49,8 +48,9 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@spautz/node-library-template": "workspace:^",
-    "@spautz/react-library-template": "workspace:^"
+    "@spautz/microfrontend-app-sdk": "workspace:^",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {}
 }

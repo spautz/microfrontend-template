@@ -22,6 +22,7 @@ const eslintConfig = [
   {
     ignores: [
       `demos/*/${projectDirectoriesToIgnore}`,
+      `microfrontend-app/${projectDirectoriesToIgnore}`,
       `packages/*/${projectDirectoriesToIgnore}`,
     ],
   },
@@ -31,6 +32,9 @@ const eslintConfig = [
       'jsx-a11y': eslintPluginJsxA11y,
       import: eslintPluginImport,
       'react-hooks': eslintPluginReactHooks,
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: true,
     },
     settings: {
       react: {

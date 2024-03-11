@@ -1,15 +1,15 @@
 {
-  "name": "@spautz/microfrontend-app-sdk",
+  "name": "@spautz/microfrontend-api-contract",
   "version": "0.0.1",
-  "description": "Utilities for loading, mounting, and launching the example microfrontend-app from the example host app",
+  "description": "Shared typings and contracts for communication between a microfrontend and host app",
   "keywords": [],
   "license": "MIT",
-  "homepage": "https://github.com/spautz/package-template/blob/main/packages/microfrontend-app-sdk#readme",
+  "homepage": "https://github.com/spautz/package-template/blob/main/packages/microfrontend-api-contract#readme",
   "bugs": "https://github.com/spautz/package-template/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/spautz/package-template.git",
-    "directory": "packages/microfrontend-app-sdk"
+    "directory": "packages/microfrontend-api-contract"
   },
   "author": {
     "name": "Steven Pautz",
@@ -85,11 +85,12 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@spautz/microfrontend-utils": "workspace:^",
-    "@spautz/microfrontend-api-contract": "workspace:^"
+    "@spautz/microfrontend-utils": "workspace:^"
   },
   "devDependencies": {},
-  "peerDependencies": {},
+  "peerDependencies": {
+    "react": "^16.9.0 || ^17 || ^18"
+  },
   "size-limit": [
     {
       "path": "./dist/esm/index.js",
@@ -98,8 +99,8 @@
     },
     {
       "path": "./dist/esm/index.js",
-      "import": "{ helloWorld }",
-      "limit": "50 B"
+      "import": "{ TodoComponent }",
+      "limit": "300 B"
     }
   ],
   "typesVersions": {

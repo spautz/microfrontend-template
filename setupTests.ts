@@ -1,1 +1,1 @@
-import './packages/microfrontend-app-sdk/setupTests.ts';
+import './packages/microfrontend-api-contract/setupTests.ts';
