@@ -2,25 +2,26 @@
 # When updating this file, sync with .gitignore
 #
 
-# Autoformatting lockfiles is slow and doesn't bring any benefits, so skip them
+# Lockfiles take up a lot of space with (usually) no value
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
-###############################################################################
-# Everything below this point is copied from .gitignore
-
-# IDEs, etc
-
-.vscode/*
-!.vscode/extensions.json
+# IDE settings
+.vscode
 .idea
-.DS_Store
+
+
+###############################################################################
+# Everything below this point is identical between .aiignore and .gitignore
+
+# project files
+
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.swp
 
 # dependencies
 
@@ -44,10 +45,16 @@ playwright-report/
 
 # build output
 
+*.log
 *.tsbuildinfo
 
+.astro/
 .cache/
+.cache-loader/
+.docusaurus/
 .next/
+.react-router/
+.turbo/
 _fresh/
 build/
 dist/
@@ -61,22 +68,18 @@ packages/*/*.tgz
 
 storybook-static/
 
-# framework-tests
+# external-tests
 
-framework-tests/*/.yalc/
-
-# log files
-
-lerna-debug.log*
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+external-tests/*/.yalc/
 
 # misc
 
+.DS_Store
+.env
 .env.local
 .env*.local
+.env.production
 .vercel
 *.pem
 next-env.d.ts
+Thumbs.db
