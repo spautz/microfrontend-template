@@ -31,9 +31,9 @@
     // the packages. See https://github.com/vercel/turborepo/discussions/7481
     "//#w:dependencies": {
       "dependsOn": [
-        "@spautz/myconfig-contracts#build",
-        "@spautz/myconfig-sdk#build",
-        "@spautz/myconfig-values#build"
+        "@spautz/mymfe-api-contracts#build",
+        "@spautz/mymfe-microfrontend-app#build",
+        "@spautz/mymfe-sdk#build"
       ]
     },
     // Lint checks cover the whole repo, so packages have to be resolvable

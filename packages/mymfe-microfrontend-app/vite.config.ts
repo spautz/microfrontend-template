@@ -1,8 +1,7 @@
-import {resolve} from 'path'
-import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react';
-import {autoComplete, Plugin as importToCDN} from 'vite-plugin-cdn-import'
-
+import { resolve } from 'node:path';
+import { defineConfig } from 'vite';
+import { autoComplete, Plugin as importToCDN } from 'vite-plugin-cdn-import';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,7 +17,7 @@ export default defineConfig({
   build: {
     manifest: true,
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ['react', 'react-dom'],
       input: {
         index1: resolve(__dirname, 'index-one.html'),
         index2: resolve(__dirname, 'index-two.html'),
