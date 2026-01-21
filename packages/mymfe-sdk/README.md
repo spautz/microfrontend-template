@@ -9,4 +9,4 @@ Example package for a React library. Used to test the publishing workflow, NPM p
 [![vulnerabilities](https://snyk.io/test/npm/@spautz/microfrontend-app-sdk/badge.svg)](https://snyk.io/test/npm/@spautz/microfrontend-app-sdk)
 [![gzip size](https://img.shields.io/bundlephobia/minzip/@spautz/microfrontend-app-sdk.svg)](https://bundlephobia.com/package/@spautz/microfrontend-app-sdk@latest)
 
-For more information or related packages, see the [Package-Template workspace](https://github.com/spautz/package-template).
+For more information or related packages, see the [Microfrontend-Template workspace](https://github.com/spautz/package-template).
