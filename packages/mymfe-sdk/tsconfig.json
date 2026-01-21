@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "isolatedDeclarations": false
+  },
+  "extends": "../../tsconfig-base.typecheck.json",
+  "include": ["*.ts", "src"]
+}

@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig-base.typecheck.json",
+  "compilerOptions": {
+    "isolatedDeclarations": false,
+    "exactOptionalPropertyTypes": false
+  },
+  "include": ["*.ts", "src"]
+}
