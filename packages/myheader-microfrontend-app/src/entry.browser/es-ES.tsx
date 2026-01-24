@@ -1,13 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from '../App.tsx';
-import '../index.css';
+import { v1RenderWithEntryPointValues } from '../v1Render/v1Render.js';
 
-console.log('Browser entry: es-ES');
+console.log('Browser entry: de-DE');
 
-// biome-ignore lint/style/noNonNullAssertion: This definitely exists in dev mode
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+const linkLabels = {
+  home: 'Inicio',
+  coffee: 'Café',
+  tea: 'Té',
+  beer: 'Cerveza',
+  wine: 'Vino',
+  water: 'Agua',
+};
+
+const v1Render = v1RenderWithEntryPointValues.bind(null, { linkLabels });
+
+export { v1Render };

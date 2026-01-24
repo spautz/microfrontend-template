@@ -84,6 +84,7 @@ const convertV1FetchParamsToEntryPoint = (
 
 export type { V1FetchParams };
 export {
+  V1_DEFAULT_LOCALE,
   v1FetchParamSchema,
   v1FetchParamExamples,
   isExactV1Locale,

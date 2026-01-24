@@ -9,25 +9,28 @@ export const v1Render_argumentsExamples: Array<Parameters<V1Render>> = [
   [
     {
       rootElement: document.createElement('div'),
-      currentUrlPath: '',
+      initialUrlPath: '',
     },
   ],
   [
     {
       rootElement: document.createElement('span'),
-      currentUrlPath: '/',
+      initialUrlPath: '/',
+      onNavLinkClick: (_nextUrlPath: string, e: Event) => {
+        e.preventDefault();
+      },
     },
   ],
   [
     {
       rootElement: document.createElement('main'),
-      currentUrlPath: '/foo/bar',
+      initialUrlPath: '/foo/bar',
     },
   ],
   [
     {
       rootElement: document.createElement('section'),
-      currentUrlPath: '/foo/bar/',
+      initialUrlPath: '/foo/bar/',
     },
   ],
 ] as const;
@@ -36,7 +39,7 @@ export const v1Render_argumentsExamples: Array<Parameters<V1Render>> = [
  * Some examples of the value returned from v1's render(), used for testing.
  */
 export const v1Render_returnExamples: Array<ReturnType<V1Render>> = [
-  (_newOptions: { currentUrlPath?: string }) => {},
+  (_newOptions: { newUrlPath?: string }) => {},
 ];
 
 // The current examples must match the current typings

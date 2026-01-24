@@ -11,21 +11,22 @@ import z from 'zod/v4';
 type V1Render_Arguments = [
   {
     rootElement: HTMLElement;
-    currentUrlPath: string;
+    initialUrlPath: string;
+    onNavLinkClick?: (nextUrlPath: string, e: Event) => void;
   },
 ];
 
 /**
  * render() returns a function to update (some) options if their values change later
  */
-type V1Render_Return = (options: { currentUrlPath?: string }) => void;
+type V1Render_Return = (newOptions: { newUrlPath?: string }) => void;
 
 type V1Render = (options: V1Render_Arguments[0]) => V1Render_Return;
 
 const v1Render_argumentsSchema = z.tuple([
   z.looseObject({
     rootElement: z.looseObject({}), // z.instanceof(HTMLElement),
-    currentUrlPath: z.string(),
+    initialUrlPath: z.string(),
   }),
 ]);
 

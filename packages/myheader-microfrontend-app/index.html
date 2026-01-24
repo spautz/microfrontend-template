@@ -1,17 +1,38 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      crossorigin="anonymous"
-    />
-    <title>Package-wrapped header microfrontend: default</title>
-  </head>
-  <body>
-    <div id="root" class="container"></div>
-    <script type="module" src="/src/entry.browser/en-US.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Package-wrapped header microfrontend: local dev</title>
+</head>
+<body>
+<div id="root" class="container"></div>
+<script type="module">
+  import {convertV1FetchParamsToEntryPoint, V1_DEFAULT_LOCALE} from "@spautz/header-api-contracts";
+
+  // For local dev, pull fetchParams (locale) from the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const locale = urlParams.get('locale');
+
+  // Note that local dev goes directly through the contracts, not through the SDK package.
+  // (The microfrontend doesn't depend on the sdk package. This makes a lot of things cleaner.)
+  // The fallback logic low replicates the SDK's behavior.
+  let v1Render;
+  try {
+    const entryPointIdentifier = convertV1FetchParamsToEntryPoint({locale});
+
+    const mfeValues = (await (import(/* @vite-ignore */ `/src/entry.browser/${entryPointIdentifier}.tsx`)));
+    ({v1Render } = mfeValues);
+  } catch(_err) {
+    console.error(`Unknown locale "${locale}". Falling back to default: "${V1_DEFAULT_LOCALE}".`);
+    const mfeValues = (await (import(/* @vite-ignore */ `/src/entry.browser/${V1_DEFAULT_LOCALE}.tsx`)));
+    ({v1Render } = mfeValues);
+  }
+
+  v1Render({
+    rootElement: document.getElementById("root"),
+    initialUrlPath: window.location.pathname
+  });
+</script>
+</body>
 </html>

@@ -17,39 +17,6 @@
  */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// V1 Fetch params
-
-/**
- * "ORIGINAL" milestone
- * 2026.01: Optional locale.
- */
-type HISTORICAL__V1FetchParamsType__ORIGINAL = {
-  locale?: undefined | null | 'de-DE' | 'en-GB' | 'en-US' | 'es-ES' | 'fr-FR';
-};
-
-// This tracks types + examples as a single unit, to make tests easier.
-const HISTORICAL__V1FetchParams__ORIGINAL = {
-  milestoneName: 'ORIGINAL',
-  type: null as unknown as HISTORICAL__V1FetchParamsType__ORIGINAL,
-  examples: [
-    {},
-    { locale: undefined },
-    { locale: null },
-    { locale: 'de-DE' },
-    { locale: 'en-GB' },
-    { locale: 'en-US' },
-    { locale: 'es-ES' },
-    { locale: 'fr-FR' },
-  ],
-} as const;
-
-/**
- * A list of all historical milestones for V1 fetch params.
- * Usually there'll only be one, which we never need to change.
- */
-const ALL_HISTORICAL__V1FetchParamMilestones = [HISTORICAL__V1FetchParams__ORIGINAL] as const;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 // V1 Render: Arguments & Return
 //
 // Do not use Zod or any other external tools here: you must manually copy over the typings when they change.
@@ -61,8 +28,9 @@ const ALL_HISTORICAL__V1FetchParamMilestones = [HISTORICAL__V1FetchParams__ORIGI
  */
 type HISTORICAL__V1RenderType__ORIGINAL = (options: {
   rootElement: HTMLElement;
-  currentUrlPath: string;
-}) => (newOptions: { currentUrlPath?: string }) => void;
+  initialUrlPath: string;
+  onNavLinkClick?: (nextUrlPath: string, e: Event) => void;
+}) => (newOptions: { newUrlPath?: string }) => void;
 
 const HISTORICAL__V1Render__ORIGINAL = {
   milestoneName: 'ORIGINAL',
@@ -72,29 +40,32 @@ const HISTORICAL__V1Render__ORIGINAL = {
     [
       {
         rootElement: document.createElement('div') as HTMLDivElement,
-        currentUrlPath: '',
+        initialUrlPath: '',
       },
     ],
     [
       {
         rootElement: document.createElement('div') as HTMLDivElement,
-        currentUrlPath: '/',
+        initialUrlPath: '/',
+        onNavLinkClick: (_nextUrlPath: string, e: Event) => {
+          e.preventDefault();
+        },
       },
     ],
     [
       {
         rootElement: document.createElement('div') as HTMLDivElement,
-        currentUrlPath: '/foo/bar',
+        initialUrlPath: '/foo/bar',
       },
     ],
     [
       {
         rootElement: document.createElement('div') as HTMLDivElement,
-        currentUrlPath: '/foo/bar/',
+        initialUrlPath: '/foo/bar/',
       },
     ],
   ] as const satisfies ReadonlyArray<Parameters<HISTORICAL__V1RenderType__ORIGINAL>>,
-  returnExamples: [(_newOptions: { currentUrlPath?: string }) => {}],
+  returnExamples: [(_newOptions: { newUrlPath?: string }) => {}],
 };
 
 /**
@@ -108,8 +79,6 @@ const ALL_HISTORICAL__V1RenderMilestones = [HISTORICAL__V1Render__ORIGINAL] as c
 // The "ALL_HISTORICAL__" values above work better for recording milestones, but for reading/processing/testing
 // it's easier when types and examples are separated.
 
-type ALL_HISTORICAL__V1FetchParamTypes =
-  (typeof ALL_HISTORICAL__V1FetchParamMilestones)[number]['type'];
 type ALL_HISTORICAL__V1RenderArgumentsTypes =
   (typeof ALL_HISTORICAL__V1RenderMilestones)[number]['argumentsType'];
 type ALL_HISTORICAL__V1RenderReturnTypes =
@@ -118,9 +87,6 @@ type ALL_HISTORICAL__V1RenderReturnTypes =
 // We use a spread to preserve the "as const" types from the examples (iterating over the array loses them).
 // When adding a new milestone above, you MUST add the new index here.
 // (Tests double-check that nothing was omitted)
-const ALL_HISTORICAL__V1FetchParamExamples = [
-  ...ALL_HISTORICAL__V1FetchParamMilestones[0].examples,
-] as const;
 const ALL_HISTORICAL__V1RenderArgumentsExamples = [
   ...ALL_HISTORICAL__V1RenderMilestones[0].argumentsExamples,
 ] as const;
@@ -133,12 +99,9 @@ const ALL_HISTORICAL__V1RenderReturnExamples = [
  * See the note at the top of this file for more.
  */
 export {
-  type ALL_HISTORICAL__V1FetchParamTypes,
   type ALL_HISTORICAL__V1RenderArgumentsTypes,
   type ALL_HISTORICAL__V1RenderReturnTypes,
-  ALL_HISTORICAL__V1FetchParamMilestones,
   ALL_HISTORICAL__V1RenderMilestones,
-  ALL_HISTORICAL__V1FetchParamExamples,
   ALL_HISTORICAL__V1RenderArgumentsExamples,
   ALL_HISTORICAL__V1RenderReturnExamples,
 };
