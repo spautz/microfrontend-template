@@ -1,5 +1,6 @@
 interface HeaderProps {
   linkLabels: {
+    siteTitle: string;
     home: string;
     coffee: string;
     tea: string;
@@ -14,7 +15,7 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <header>
-      <h1>I'm a header!</h1>
+      <h1>{linkLabels.siteTitle}</h1>
       <nav>
         <ul>
           <li>{linkLabels.home}</li>

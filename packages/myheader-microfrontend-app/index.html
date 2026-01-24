@@ -6,33 +6,132 @@
   <title>Package-wrapped header microfrontend: local dev</title>
 </head>
 <body>
-<div id="root" class="container"></div>
-<script type="module">
-  import {convertV1FetchParamsToEntryPoint, V1_DEFAULT_LOCALE} from "@spautz/header-api-contracts";
+  <form method="GET">
+    <fieldset>
+      <legend>Local Dev Controls</legend>
+      <label for="locale-selector">Locale
+        <select id="locale-selector" name="locale">
+          <option value="">(unset)</option>
+        </select>
+      </label>
+      <label for="mode-selector">Local dev mode
+        <select id="mode-selector" name="mode"></select>
+      </label>
+      <button type="submit">Refresh</button>
+    </fieldset>
+  </form>
 
-  // For local dev, pull fetchParams (locale) from the URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const locale = urlParams.get('locale');
+  <div id="root"></div>
 
-  // Note that local dev goes directly through the contracts, not through the SDK package.
-  // (The microfrontend doesn't depend on the sdk package. This makes a lot of things cleaner.)
-  // The fallback logic low replicates the SDK's behavior.
-  let v1Render;
-  try {
-    const entryPointIdentifier = convertV1FetchParamsToEntryPoint({locale});
+  <script type="module">
+    // biome-ignore-all lint/suspicious/noConsole: Console logs/warnings/errors are fine for local dev
+    import { convertV1FetchParamsToEntryPoint, ENTRY_POINTS_FOR_V1_MICROFRONTEND, V1_DEFAULT_LOCALE } from "@spautz/header-api-contracts";
 
-    const mfeValues = (await (import(/* @vite-ignore */ `/src/entry.browser/${entryPointIdentifier}.tsx`)));
-    ({v1Render } = mfeValues);
-  } catch(_err) {
-    console.error(`Unknown locale "${locale}". Falling back to default: "${V1_DEFAULT_LOCALE}".`);
-    const mfeValues = (await (import(/* @vite-ignore */ `/src/entry.browser/${V1_DEFAULT_LOCALE}.tsx`)));
-    ({v1Render } = mfeValues);
-  }
+    // For local dev, pull fetchParams (locale) from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const locale = urlParams.get('locale') || undefined;
+    let mode = urlParams.get('mode') || undefined;
 
-  v1Render({
-    rootElement: document.getElementById("root"),
-    initialUrlPath: window.location.pathname
-  });
-</script>
+    // To ease debugging, local dev can show either the "real" microfrontend app, or something else
+    // from the MFE's modules.
+    const AVAILABLE_MODES = {
+      /**
+       * `v1Render` mounts a React app into a target element
+       */
+      v1Render: (browserEntry, _serverEntry) => {
+        browserEntry.v1Render({
+          rootElement,
+          initialUrlPath: window.location.pathname
+        });
+      },
+      /**
+       * `v1Prerender` shows the raw html from a prerender
+       */
+      v1Prerender: async (_browserEntry, serverEntry) => {
+        // Dump the raw prerender html on-screen
+        const html = await serverEntry.v1Prerender({
+          initialUrlPath: window.location.pathname
+        });
+        rootElement.innerHTML = `
+          <textarea>${html}</textarea>
+          <div>${html}</div>
+        `;
+      }
+    };
+    const AVAILABLE_MODE_NAMES = Object.keys(AVAILABLE_MODES)
+
+    // Set up some useful page controls
+    const rootElement = document.getElementById("root");
+    if (!rootElement) {
+      throw new Error('Local-dev error: Root element not found. This should never happen: it\'s created just a few lines above');
+    }
+    const localeSelector = document.getElementById("locale-selector");
+    const modeSelector = document.getElementById("mode-selector");
+    if (localeSelector) {
+      for (const localeIdentifier of ENTRY_POINTS_FOR_V1_MICROFRONTEND) {
+        const localeOption = document.createElement("option");
+        localeOption.value = localeIdentifier||'';
+        localeOption.textContent = localeIdentifier;
+        if (locale === localeIdentifier) {
+          localeOption.selected = true;
+        }
+        localeSelector.append(localeOption);
+      }
+    } else {
+      throw new Error('Local-dev error: locale-selector not found. This should never happen: it\'s created just a few lines above');
+    }
+    if (modeSelector) {
+      for (const modeName of AVAILABLE_MODE_NAMES) {
+        const modeOption = document.createElement("option");
+        modeOption.value = modeName;
+        modeOption.textContent = modeName;
+        if (mode === modeName) {
+          modeOption.selected = true;
+        }
+        modeSelector.append(modeOption);
+      }
+    } else {
+      throw new Error('Local-dev error: mode-selector not found. This should never happen: it\'s created just a few lines above');
+    }
+
+    mode = mode || AVAILABLE_MODE_NAMES[0];
+    if (!AVAILABLE_MODE_NAMES.includes(mode)) {
+      console.error(`Unknown mode "${mode}". Falling back to default: "${AVAILABLE_MODE_NAMES[0]}".`);
+      mode = AVAILABLE_MODE_NAMES[0];
+    }
+
+    // Now resolve and run the module.
+    //
+    // Local dev goes directly through the contracts, not through the SDK package.
+    // (The microfrontend doesn't depend on the sdk package. This makes a lot of things cleaner.)
+    // The fallback logic low replicates the SDK's behavior.
+    let browserModule;
+    let serverModule;
+    try {
+      const entryPointIdentifier = convertV1FetchParamsToEntryPoint({locale});
+      browserModule = (await (import(/* @vite-ignore */ `/src/entryPoints/browser/${entryPointIdentifier}.tsx`)));
+      serverModule = (await (import(/* @vite-ignore */ `/src/entryPoints/server/${entryPointIdentifier}.tsx`)));
+    } catch (_err) {
+      try {
+        console.error(`Unknown locale "${locale}". Falling back to default: "${V1_DEFAULT_LOCALE}".`);
+        browserModule = (await (import(/* @vite-ignore */ `/src/entryPoints/browser/${V1_DEFAULT_LOCALE}.tsx`)));
+        serverModule = (await (import(/* @vite-ignore */ `/src/entryPoints/server/${V1_DEFAULT_LOCALE}.tsx`)));
+      } catch (_err2) {
+        console.error('Could not resolve microfrontend module. This should never happen.')
+      }
+    }
+
+    if (browserModule && serverModule) {
+      console.log(`Running mode "${mode}".`, { browserModule, serverModule });
+      // Run the demo/mode
+      AVAILABLE_MODES[mode](browserModule, serverModule);
+    } else {
+      rootElement.innerHTML = `
+        <div style="color: red; font-size: 24px;">
+          Could not resolve a microfrontend module. This should never happen.
+        </div>
+      `;
+    }
+  </script>
 </body>
 </html>

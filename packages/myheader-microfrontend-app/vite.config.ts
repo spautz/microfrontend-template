@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 // Entry points must be prefixed with `./` for the federation plugin
 const entryPoints = ENTRY_POINTS_FOR_V1_MICROFRONTEND.reduce<Record<string, string>>(
   (acc, identifier) => {
-    acc[`./${identifier}`] = `./src/entry.browser/${identifier}.tsx`;
+    acc[`./${identifier}`] = `./src/entryPoints/browser/${identifier}.tsx`;
     return acc;
   },
   {},

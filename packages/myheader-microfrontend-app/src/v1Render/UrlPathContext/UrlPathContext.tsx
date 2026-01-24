@@ -35,7 +35,7 @@ const UrlPathProvider = (props: UrlPathProviderProps) => {
     };
   }, [setUrlPath]);
 
-  return <UrlPathContext.Provider value={urlPath}> {children};</UrlPathContext.Provider>;
+  return <UrlPathContext.Provider value={urlPath}> {children}</UrlPathContext.Provider>;
 };
 
 const useUrlPath = (): string => {
