@@ -1,37 +1,74 @@
 import { resolve } from 'node:path';
+import federation from '@originjs/vite-plugin-federation';
+import {
+  ENTRY_POINTS_FOR_V1_MICROFRONTEND,
+  entryPointValidationRegex,
+} from '@spautz/header-api-contracts';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import { autoComplete, Plugin as importToCDN } from 'vite-plugin-cdn-import';
+
+// Entry points must be prefixed with `./` for this plugin
+const entryPoints = ENTRY_POINTS_FOR_V1_MICROFRONTEND.reduce<Record<string, string>>(
+  (acc, identifier) => {
+    acc[`./${identifier}`] = `./src/entry.browser/${identifier}.tsx`;
+    return acc;
+  },
+  {},
+);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    // importToCDN({
-    //   modules: [
-    //     autoComplete('react'),
-    //     autoComplete('react-dom')
-    //   ],
-    // }),
-  ],
   build: {
     manifest: true,
+    sourcemap: true,
     rollupOptions: {
-      external: ['react', 'react-dom'],
       input: {
-        index1: resolve(__dirname, 'index-one.html'),
-        index2: resolve(__dirname, 'index-two.html'),
+        // Main entry point
+        default: resolve(__dirname, 'index.html'),
+        // Additional pages
+        ...ENTRY_POINTS_FOR_V1_MICROFRONTEND.reduce<Record<string, string>>((acc, identifier) => {
+          acc[`index-${identifier}`] = `./index-${identifier}.html`;
+          acc[identifier] = `./index-${identifier}.html`;
+          return acc;
+        }, {}),
       },
     },
   },
-  resolve: {
-    // alias: {
-    //   'react': 'https://unpkg.com/react@18/umd/react.development.js',
-    //   'react/jsx-runtime': 'https://unpkg.com/react@18/umd/react.development.js',
-    //   // 'react/': 'https://cdn.skypack.dev/react@18/jsx-runtime',
-    //   'react-dom': 'https://unpkg.com/react-dom@18/umd/react-dom.development.js',
-    //   'react-dom/client': 'https://unpkg.com/react-dom@18/umd/react-dom.development.js',
-    //   // 'react-dom/client': 'https://cdn.skypack.dev/react-dom@18/client'
-    // }
+  plugins: [
+    react({
+      babel: {
+        plugins: [['babel-plugin-react-compiler']],
+      },
+    }),
+    federation({
+      name: 'myheader-mfe',
+      filename: 'remoteEntry-myheader.js',
+      exposes: entryPoints,
+      shared: {
+        react: { requiredVersion: '18' },
+        'react-dom': { requiredVersion: '18' },
+      },
+    }),
+    {
+      name: 'local-dev-rewrite',
+      configureServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          // Grab just the file-part of the filename: we don't care about extensions or slashes
+          const urlToken = req.url?.match(/[^\\/.]+/);
+          if (urlToken) {
+            const match = urlToken[0].match(entryPointValidationRegex);
+            if (match) {
+              req.url = `/index-${match[0]}.html`;
+            }
+          }
+          next();
+        });
+      },
+    },
+  ],
+  server: {
+    proxy: {
+      // Remote data sources for local dev
+    },
   },
 });
