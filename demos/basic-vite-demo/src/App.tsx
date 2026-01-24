@@ -2,7 +2,7 @@ import {
   type BeverageV1Payload,
   fetchBeverage,
   internal_setV1BeveragePayload,
-} from '@spautz/mymfe-sdk';
+} from '@spautz/header-sdk';
 import type { JSX } from 'react/jsx-runtime';
 import { useBeverageConfig } from './future-react-utils/useBeverageConfig.ts';
 

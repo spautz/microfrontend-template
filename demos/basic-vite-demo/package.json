@@ -39,7 +39,7 @@
     "size-check": "source-map-explorer dist/**/*.js"
   },
   "dependencies": {
-    "@spautz/mymfe-sdk": "workspace:^"
+    "@spautz/header-sdk": "workspace:^"
   },
   "devDependencies": {
     "@types/react": "catalog:",

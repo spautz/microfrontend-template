@@ -1,0 +1,92 @@
+import z from 'zod/v4';
+import { ENTRY_POINTS_FOR_V1_SDK } from './v1EntryPoints.ts';
+
+/*
+ * Fetch-params are the arguments that a consumer must pass when loading the microfrontend:
+ * they map directly to an entry point, which is where we get all functionality.
+ *
+ * For V1 of this Header microfrontend: A locale may be provided, but it's not required.
+ */
+
+const V1_SUPPORTED_LOCALES = [
+  // All entry points are supported, plus null/undefined to get the default
+  // (This is easy because we have one field that maps directly to the entry point.
+  //  We'd need a little more work if we had multiple fields that mapped to entry points.)
+  ...ENTRY_POINTS_FOR_V1_SDK,
+  undefined,
+  null,
+] as const;
+
+const V1_DEFAULT_LOCALE: V1FetchParams['locale'] = 'en-US';
+
+type V1FetchParams = {
+  locale?: (typeof V1_SUPPORTED_LOCALES)[number];
+};
+
+/**
+ * To accommodate future unknown locales, we allow any valid-looking locale -- even if it's not in the above list.
+ */
+const v1FetchParamSchema = z.strictObject({
+  locale: z
+    .union([
+      z.null(),
+      z.undefined(),
+      z.string().regex(/^[a-z]{2}-[A-Z]{2}$/, 'Invalid locale code'),
+    ])
+    .optional(),
+});
+
+/**
+ * A list of current fetch param examples, used for testing.
+ */
+const v1FetchParamExamples: Array<V1FetchParams> = [
+  {},
+  ...V1_SUPPORTED_LOCALES.map((localeString) => ({
+    locale: localeString,
+  })),
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////
+// Utils
+
+/**
+ * Indicates whether the provided value is one of the locales in our explicit list.
+ * This is dangerous because the list might be out-of-date: for most cases you might want
+ * `isPotentialV1Locale()` instead
+ */
+const isExactV1Locale = (localeString: unknown): localeString is V1FetchParams => {
+  // biome-ignore lint/suspicious/noExplicitAny: Validating type
+  return V1_SUPPORTED_LOCALES.includes(localeString as any);
+};
+
+/**
+ * Indicates whether the provided value is *likely* a valid locale.
+ * This is more future-proof than `isExactV1Locale()`
+ */
+const isPotentialV1Locale = (localeString: unknown): localeString is V1FetchParams => {
+  return !localeString || /^[a-z]{2}-[A-Z]{2}$/.test(localeString as string);
+};
+
+/**
+ * Canonical way to build the path for a V1 microfrontend's entry file.
+ * The SDK package and the microfrontend app should use this to generate URLs and filenames.
+ */
+const convertV1FetchParamsToEntryPoint = (
+  fetchParams: V1FetchParams,
+): (typeof ENTRY_POINTS_FOR_V1_SDK)[number] => {
+  const validation = v1FetchParamSchema.safeParse(fetchParams);
+  if (validation.error) {
+    console.error('Invalid fetchParams for header microfrontend: ', fetchParams, validation);
+    throw new Error(`Invalid fetchParams for header microfrontend: ${validation.error}`);
+  }
+  return fetchParams.locale || V1_DEFAULT_LOCALE;
+};
+
+export type { V1FetchParams };
+export {
+  v1FetchParamSchema,
+  v1FetchParamExamples,
+  isExactV1Locale,
+  isPotentialV1Locale,
+  convertV1FetchParamsToEntryPoint,
+};

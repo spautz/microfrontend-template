@@ -16,7 +16,7 @@ const viteConfig: UserConfig = defineConfig({
   server: {
     proxy: {
       '/proxy-to-mfe': {
-        // Default: load from the local `packages/mymfe-microfrontend-app/` dev server.
+        // Default: load from the local `packages/header-microfrontend-app/` dev server.
         // For local dev, you could point this at staging instead.
         // For production, you'd point the app at the real URL instead of `/proxy-to-mfe`.
         target: 'http://localhost:5173',

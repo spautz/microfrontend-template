@@ -21,7 +21,7 @@ jobs:
         && github.ref_protected == true
     strategy:
       matrix:
-        package-name: [mymfe-api-contracts, mymfe-sdk]
+        package-name: [myheader-api-contracts, myheader-sdk]
     steps:
       - uses: actions/checkout@v6.0.1
         with:

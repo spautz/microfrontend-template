@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-name: [mymfe-api-contracts, mymfe-microfrontend-app, mymfe-sdk]
+        package-name: [myheader-api-contracts, myheader-microfrontend-app, myheader-sdk]
 
     steps:
       - uses: actions/checkout@v6.0.1

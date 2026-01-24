@@ -1,15 +1,15 @@
 {
-  "name": "@spautz/mymfe-api-contracts",
+  "name": "@spautz/header-sdk",
   "version": "0.0.1",
-  "description": "Typings and API contracts for 'mymfe', in my opinionated microfrontend-template",
+  "description": "SDK package for fetching and using a header microfrontend, in my opinionated microfrontend-template",
   "keywords": [],
   "license": "MIT",
-  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/packages/mymfe-api-contracts#readme",
+  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/packages/header-sdk#readme",
   "bugs": "https://github.com/spautz/microfrontend-template/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/spautz/microfrontend-template.git",
-    "directory": "packages/mymfe-api-contracts"
+    "directory": "packages/header-sdk"
   },
   "author": {
     "name": "Steven Pautz",
@@ -74,7 +74,7 @@
     "size-check": "size-limit --why"
   },
   "dependencies": {
-    "zod": "^4.3.5"
+    "@spautz/header-api-contracts": "workspace:^"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
@@ -95,7 +95,7 @@
     },
     {
       "path": "./dist/esm/index.js",
-      "import": "{ headerV1FetchParamSchema }",
+      "import": "{ initializeBeverageCache }",
       "limit": "75 KB"
     }
   ]

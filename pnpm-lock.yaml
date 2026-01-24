@@ -145,9 +145,9 @@ importers:
 
   demos/basic-vite-demo:
     dependencies:
-      '@spautz/mymfe-sdk':
+      '@spautz/header-sdk':
         specifier: workspace:^
-        version: link:../../packages/mymfe-sdk
+        version: link:../../packages/myheader-sdk
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
@@ -174,7 +174,7 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@24.5.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1)
 
-  packages/mymfe-api-contracts:
+  packages/myheader-api-contracts:
     dependencies:
       zod:
         specifier: ^4.3.5
@@ -205,11 +205,11 @@ importers:
         specifier: 'catalog:'
         version: 0.18.4(@arethetypeswrong/core@0.18.2)(@typescript/native-preview@7.0.0-dev.20251202.1)(publint@0.3.16)(typescript@5.9.3)
 
-  packages/mymfe-microfrontend-app:
+  packages/myheader-microfrontend-app:
     dependencies:
-      '@spautz/mymfe-api-contracts':
+      '@spautz/header-api-contracts':
         specifier: workspace:^
-        version: link:../mymfe-api-contracts
+        version: link:../myheader-api-contracts
       react:
         specifier: 'catalog:'
         version: 19.2.3
@@ -239,11 +239,11 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@24.5.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1)
 
-  packages/mymfe-sdk:
+  packages/myheader-sdk:
     dependencies:
-      '@spautz/mymfe-api-contracts':
+      '@spautz/header-api-contracts':
         specifier: workspace:^
-        version: link:../mymfe-api-contracts
+        version: link:../myheader-api-contracts
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 'catalog:'
