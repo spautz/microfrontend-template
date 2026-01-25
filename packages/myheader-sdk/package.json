@@ -95,7 +95,7 @@
     },
     {
       "path": "./dist/esm/index.js",
-      "import": "{ initializeBeverageCache }",
+      "import": "{ renderHeader }",
       "limit": "75 KB"
     }
   ]

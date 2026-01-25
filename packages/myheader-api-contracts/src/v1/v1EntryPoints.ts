@@ -17,6 +17,12 @@
  */
 
 /**
+ * Part of the module federation setup. This file contains and provides access to all of the
+ * entry points exposed by the microfrontend app.
+ */
+const REMOTE_MODULE_FILENAME = 'remoteEntry-myheader.js';
+
+/**
  * An identifier that's being built in the microfrontend. These can be accessed in local dev only.
  */
 const STATUS_IN_DEVELOPMENT = 1;
@@ -63,6 +69,7 @@ const ENTRY_POINTS_FOR_V1_SDK = ENTRY_POINTS_FOR_V1_MICROFRONTEND.filter(
 const entryPointValidationRegex = /^[a-z]{2}-[A-Z]{2}$/;
 
 export {
+  REMOTE_MODULE_FILENAME,
   STATUS_IN_DEVELOPMENT,
   STATUS_PUBLISHED,
   STATUS_REMOVE_IN_NEXT_MAJOR_VERSION,

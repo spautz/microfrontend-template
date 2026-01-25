@@ -1,34 +1,22 @@
-import {
-  type BeverageV1Payload,
-  fetchBeverage,
-  internal_setV1BeveragePayload,
-} from '@spautz/header-sdk';
+import React from 'react';
 import type { JSX } from 'react/jsx-runtime';
-import { useBeverageConfig } from './future-react-utils/useBeverageConfig.ts';
 
 function App(): JSX.Element {
-  const [beverageConfigState, beverageConfigPayload, fullCacheEntry] = useBeverageConfig(
-    new URL('/proxy-to-mfe/', window.location.origin),
-  );
+  const [count, setCount] = React.useState(0);
 
   return (
-    <div>
-      <button type="button" onClick={() => fetchBeverage()}>
-        Load Payload from <code>/proxy-to-config</code>
-      </button>
-
-      <ul>
-        <li>
-          beverageConfigState: <pre>{JSON.stringify(beverageConfigState, null, 2)}</pre>
-        </li>
-        <li>
-          beverageConfigPayload: <pre>{JSON.stringify(beverageConfigPayload, null, 2)}</pre>
-        </li>
-        <li>
-          fullCacheEntry @ {Date.now()}: <pre>{JSON.stringify(fullCacheEntry, null, 2)}</pre>
-        </li>
-      </ul>
-    </div>
+    <>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button type="button" onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+    </>
   );
 }
 

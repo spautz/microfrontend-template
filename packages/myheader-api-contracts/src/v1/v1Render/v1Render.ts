@@ -12,7 +12,7 @@ type V1Render_Arguments = [
   {
     rootElement: HTMLElement;
     initialUrlPath: string;
-    onNavLinkClick?: (nextUrlPath: string, e: Event) => void;
+    onNavLinkClick?: ((nextUrlPath: string, e: Event) => void) | undefined;
   },
 ];
 

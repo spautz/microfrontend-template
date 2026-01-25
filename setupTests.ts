@@ -1,1 +1,1 @@
-import './demos/browser-demo/setupTests.ts';
+import './packages/myheader-microfrontend-app/setupTests.ts';

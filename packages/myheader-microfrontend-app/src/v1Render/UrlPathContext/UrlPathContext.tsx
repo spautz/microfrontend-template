@@ -10,7 +10,7 @@ let internal_setStateForUrlPath: ((value: string | ((prev: string) => string)) =
   null;
 
 const setUrlPath = (newUrlPath: string) => {
-  if (!internal_setStateForUrlPath) {
+  if (internal_setStateForUrlPath == null) {
     throw new Error(
       'Cannot setUrlPath for the Header microfrontend unless the Header is mounted. This error should never happen.',
     );
@@ -35,7 +35,7 @@ const UrlPathProvider = (props: UrlPathProviderProps) => {
     };
   }, [setUrlPath]);
 
-  return <UrlPathContext.Provider value={urlPath}> {children}</UrlPathContext.Provider>;
+  return <UrlPathContext.Provider value={urlPath}>{children}</UrlPathContext.Provider>;
 };
 
 const useUrlPath = (): string => {

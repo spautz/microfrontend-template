@@ -1,4 +1,4 @@
-const getLinkLabels = async () => {
+﻿const getLinkLabels = async () => {
   return {
     siteTitle: '¡Soy un encabezado!',
     home: 'Inicio',
