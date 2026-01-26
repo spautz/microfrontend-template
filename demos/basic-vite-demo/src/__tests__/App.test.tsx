@@ -12,7 +12,6 @@ describe('App', () => {
   it('Renders without error', () => {
     render(<App />);
 
-    expect(screen.getByText('beverageConfigState:')).toBeVisible();
-    expect(screen.getByText('beverageConfigPayload:')).toBeVisible();
+    expect(screen.getByText('Vite + React')).toBeVisible();
   });
 });

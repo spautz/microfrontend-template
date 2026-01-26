@@ -6,6 +6,7 @@ import { App } from './App.js';
 
 renderHeader({
   baseUrl: new URL('/proxy-to-mfe/', window.location.origin),
+  locale: 'en-US',
   rootElement: document.getElementById('header') as HTMLElement,
   initialUrlPath: window.location.pathname,
 });
