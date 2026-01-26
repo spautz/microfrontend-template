@@ -8,41 +8,45 @@ import { ENTRY_POINTS_FOR_V1_SDK, entryPointValidationRegex } from './v1EntryPoi
  * For V1 of this microfrontend: A locale may be provided, but it's not required.
  */
 interface V1FetchParams {
-  locale?: (typeof V1_SUPPORTED_LOCALES)[number];
+  locale?: V1ExplicitlyKnownLocale;
 }
+
+/**
+ * Build-time type checks use the *explicit* list of locales, to give good type hints and to catch
+ * any places where host app typings don't line up.
+ */
+type V1ExplicitlyKnownLocale = (typeof ENTRY_POINTS_FOR_V1_SDK)[number] | null;
+/**
+ * Runtime checks use a *potential* value for locales, for forward-compatibility.
+ */
+type V1PotentialLocale = string | null | undefined;
 
 const V1_SUPPORTED_LOCALES = [
   // All entry points are supported as locale names, or null to get the default.
-  // (Locale maps directly to entry point. `convertV1FetchParamsToEntryPoint` handles that.)
+  // (The locale maps directly to entry the point, via `convertV1FetchParamsToEntryPoint`)
   ...ENTRY_POINTS_FOR_V1_SDK,
   null,
-] as const;
+] as const satisfies ReadonlyArray<V1ExplicitlyKnownLocale>;
 
-const V1_DEFAULT_LOCALE: V1FetchParams['locale'] = 'en-US';
+const V1_DEFAULT_LOCALE: (typeof ENTRY_POINTS_FOR_V1_SDK)[number] = 'en-US';
 
 /**
  * To accommodate future unknown locales, we allow any valid-looking locale -- even if it's not
  * in the above list.
  */
 const v1FetchParamsSchema = z.strictObject({
-  locale: z
-    .union([
-      z.null(),
-      z.undefined(),
-      z.string().regex(entryPointValidationRegex, 'Invalid locale code'),
-    ])
-    .optional(),
+  locale: z.string().regex(entryPointValidationRegex, 'Invalid locale code').nullable().optional(),
 });
 
 /**
  * A list of current fetch param examples, used for testing.
  */
-const v1FetchParamsExamples: Array<V1FetchParams> = [
+const v1FetchParamsExamples = [
   {},
   ...V1_SUPPORTED_LOCALES.map((localeString) => ({
     locale: localeString,
   })),
-] as const;
+] as const satisfies ReadonlyArray<V1FetchParams>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Utils
@@ -52,17 +56,22 @@ const v1FetchParamsExamples: Array<V1FetchParams> = [
  * This is dangerous because the list might be out-of-date: for most cases you'll want
  * `isPotentialV1Locale()` instead
  */
-const isExactV1Locale = (localeString: unknown): localeString is V1FetchParams => {
+const isExplicitlyKnownV1Locale = (
+  localeString: unknown,
+): localeString is V1ExplicitlyKnownLocale => {
   // biome-ignore lint/suspicious/noExplicitAny: Validating type
   return V1_SUPPORTED_LOCALES.includes(localeString as any);
 };
 
 /**
  * Indicates whether the provided value is *likely* a valid locale.
- * This is more future-proof than `isExactV1Locale()`
+ * This is more future-proof than `isExplicitlyKnownV1Locale()`
  */
-const isPotentialV1Locale = (localeString: unknown): localeString is V1FetchParams => {
-  return !localeString || entryPointValidationRegex.test(localeString as string);
+const isPotentialV1Locale = (localeString: unknown): localeString is V1PotentialLocale => {
+  if (localeString == null) {
+    return true;
+  }
+  return typeof localeString === 'string' && entryPointValidationRegex.test(localeString);
 };
 
 /**
@@ -76,7 +85,6 @@ const convertV1FetchParamsToEntryPoint = (
   if (!skipValidation) {
     const validation = v1FetchParamsSchema.safeParse(fetchParams);
     if (validation.error) {
-      console.error('Invalid fetchParams for header microfrontend: ', fetchParams, validation);
       throw new Error(`Invalid fetchParams for header microfrontend: ${validation.error}`);
     }
   }
@@ -88,7 +96,7 @@ export {
   V1_DEFAULT_LOCALE,
   v1FetchParamsSchema,
   v1FetchParamsExamples,
-  isExactV1Locale,
+  isExplicitlyKnownV1Locale,
   isPotentialV1Locale,
   convertV1FetchParamsToEntryPoint,
 };

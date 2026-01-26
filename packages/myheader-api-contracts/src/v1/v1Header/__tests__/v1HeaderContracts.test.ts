@@ -1,58 +1,55 @@
 import { describe, expect, test } from 'vitest';
+import {
+  type V1Header_MountOptions,
+  type V1Header_MountReturn,
+  type V1Header_PrerenderOptions,
+  type V1Header_PrerenderReturn,
+  type V1Header_RehydrateOptions,
+  type V1Header_RehydrateReturn,
+  v1Header_mountOptionsExamples,
+  v1Header_mountOptionsSchema,
+  v1Header_mountReturnExamples,
+  v1Header_prerenderOptionsExamples,
+  v1Header_prerenderOptionsSchema,
+  v1Header_prerenderReturnExamples,
+  v1Header_rehydrateOptionsExamples,
+  v1Header_rehydrateOptionsSchema,
+  v1Header_rehydrateReturnExamples,
+} from '../v1HeaderContracts.ts';
 
-import { type V1Render, v1Render_argumentsSchema } from '../v1HeaderContracts.ts';
+// Validate all examples against their typings.
+// In general the examples should be `as const satisfies ...`, which would make these checks
+// redundant. They're repeated here as an extra safety net.
 
-/**
- * Some examples of full arguments to v1's render(), used for testing.
- */
-export const v1Render_argumentsExamples: Array<Parameters<V1Render>> = [
-  [
-    {
-      rootElement: document.createElement('div'),
-      initialUrlPath: '',
-    },
-  ],
-  [
-    {
-      rootElement: document.createElement('span'),
-      initialUrlPath: '/',
-      onNavLinkClick: (_nextUrlPath: string, e: Event) => {
-        e.preventDefault();
-      },
-    },
-  ],
-  [
-    {
-      rootElement: document.createElement('main'),
-      initialUrlPath: '/foo/bar',
-    },
-  ],
-  [
-    {
-      rootElement: document.createElement('section'),
-      initialUrlPath: '/foo/bar/',
-    },
-  ],
-] as const;
+v1Header_mountOptionsExamples satisfies ReadonlyArray<V1Header_MountOptions>;
+v1Header_mountReturnExamples satisfies ReadonlyArray<V1Header_MountReturn>;
 
-/**
- * Some examples of the value returned from v1's render(), used for testing.
- */
-export const v1Render_returnExamples: Array<ReturnType<V1Render>> = [
-  (_newOptions: { newUrlPath?: string }) => {},
-];
+v1Header_rehydrateOptionsExamples satisfies ReadonlyArray<V1Header_RehydrateOptions>;
+v1Header_rehydrateReturnExamples satisfies ReadonlyArray<V1Header_RehydrateReturn>;
 
-// The current examples must match the current typings
+v1Header_prerenderOptionsExamples satisfies ReadonlyArray<V1Header_PrerenderOptions>;
+v1Header_prerenderReturnExamples satisfies ReadonlyArray<V1Header_PrerenderReturn>;
 
-v1Render_argumentsExamples satisfies Array<Parameters<V1Render>>;
-v1Render_returnExamples satisfies Array<ReturnType<V1Render>>;
-
-// Finally, validate all examples against the schema
-describe('V1 Render', () => {
+// Validate all examples against their schemas
+describe('V1 Header Contracts', () => {
   test.each(
-    v1Render_argumentsExamples,
-  )('Argument examples all pass current schema (#%#)', (...exampleRenderArguments) => {
-    const result = v1Render_argumentsSchema.safeParse(exampleRenderArguments);
+    v1Header_mountOptionsExamples,
+  )('Mount option examples all pass current schema (#%#)', (exampleMountOptions) => {
+    const result = v1Header_mountOptionsSchema.safeParse(exampleMountOptions);
+    expect(result.error).toBeFalsy();
+  });
+
+  test.each(
+    v1Header_rehydrateOptionsExamples,
+  )('Rehydrate option examples all pass current schema (#%#)', (exampleRehydrateOptions) => {
+    const result = v1Header_rehydrateOptionsSchema.safeParse(exampleRehydrateOptions);
+    expect(result.error).toBeFalsy();
+  });
+
+  test.each(
+    v1Header_prerenderOptionsExamples,
+  )('Prerender option examples all pass current schema (#%#)', (examplePrerenderOptions) => {
+    const result = v1Header_prerenderOptionsSchema.safeParse(examplePrerenderOptions);
     expect(result.error).toBeFalsy();
   });
 });

@@ -24,7 +24,7 @@
  * 2026.01: Optional locale.
  */
 type HISTORICAL__V1FetchParamsType__ORIGINAL = {
-  locale?: undefined | null | 'de-DE' | 'en-GB' | 'en-US' | 'es-ES' | 'fr-FR';
+  locale?: undefined | null | 'de-DE' | 'en-GB' | 'en-US' | 'es-ES';
 };
 
 // This tracks types + examples as a single unit, to make tests easier.
@@ -39,29 +39,28 @@ const HISTORICAL__v1FetchParams__ORIGINAL = {
     { locale: 'en-GB' },
     { locale: 'en-US' },
     { locale: 'es-ES' },
-    { locale: 'fr-FR' },
-  ],
+  ] as const satisfies ReadonlyArray<HISTORICAL__V1FetchParamsType__ORIGINAL>,
 } as const;
 
 /**
  * A list of all historical milestones for V1 fetch params.
  * Usually there'll only be one, which we never need to change.
  */
-const ALL_HISTORICAL__v1FetchParamMilestones = [HISTORICAL__v1FetchParams__ORIGINAL] as const;
+const ALL_HISTORICAL__v1FetchParamsMilestones = [HISTORICAL__v1FetchParams__ORIGINAL] as const;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Rearrange for export
 // The "ALL_HISTORICAL__" values above work better for recording milestones, but for reading/processing/testing
 // it's easier when types and examples are separated.
 
-type ALL_HISTORICAL__V1FetchParamTypes =
-  (typeof ALL_HISTORICAL__v1FetchParamMilestones)[number]['type'];
+type ALL_HISTORICAL__V1FetchParamsTypes =
+  (typeof ALL_HISTORICAL__v1FetchParamsMilestones)[number]['type'];
 
 // We use a spread to preserve the "as const" types from the examples (iterating over the array loses them).
 // When adding a new milestone above, you MUST add the new index here.
 // (Tests double-check that nothing was omitted)
-const ALL_HISTORICAL__v1FetchParamExamples = [
-  ...ALL_HISTORICAL__v1FetchParamMilestones[0].examples,
+const ALL_HISTORICAL__v1FetchParamsExamples = [
+  ...ALL_HISTORICAL__v1FetchParamsMilestones[0].examples,
 ] as const;
 
 /*
@@ -69,7 +68,7 @@ const ALL_HISTORICAL__v1FetchParamExamples = [
  * See the note at the top of this file for more.
  */
 export {
-  type ALL_HISTORICAL__V1FetchParamTypes,
-  ALL_HISTORICAL__v1FetchParamMilestones,
-  ALL_HISTORICAL__v1FetchParamExamples,
+  type ALL_HISTORICAL__V1FetchParamsTypes,
+  ALL_HISTORICAL__v1FetchParamsMilestones,
+  ALL_HISTORICAL__v1FetchParamsExamples,
 };

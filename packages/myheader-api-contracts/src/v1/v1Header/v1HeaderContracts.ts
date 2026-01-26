@@ -20,8 +20,8 @@ interface V1Header_BaseOptions {
 }
 
 /**
- * An environment-safe util to create dom elements (or placeholders for them)
- * even in non-browser environments
+ * An environment-safe util to create dom elements (or mock placeholders for them) in both
+ * browser and non-browser environments. Useful for tests and example values.
  */
 const createElement = (elementType: string): HTMLElement => {
   if (typeof document === 'undefined' || !document.createElement) {
@@ -63,7 +63,7 @@ type V1Header_MountReturn = {
  * about yet.
  */
 const v1Header_mountOptionsSchema = z.looseObject({
-  initialUrlPath: z.string(),
+  initialUrlPath: z.string().nullable(),
   rootElement: typeof HTMLElement === 'undefined' ? z.object() : z.instanceof(HTMLElement),
   onNavLinkClick: z.function().optional(),
 });
@@ -87,7 +87,17 @@ const v1Header_mountOptionsExamples = [
     rootElement: createElement('main'),
     initialUrlPath: '/foo/bar/',
   },
-] as const;
+] as const satisfies ReadonlyArray<V1Header_MountOptions>;
+
+/**
+ * Examples of the return value from mount(), for testing
+ */
+const v1Header_mountReturnExamples = [
+  {
+    setNewOptions: (_newOptions: { newUrlPath?: string }) => {},
+    unmount: () => {},
+  },
+] as const satisfies ReadonlyArray<V1Header_MountReturn>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // v1Header_rehydrate() has the same signature as v1Header_mount()
@@ -101,7 +111,16 @@ const v1Header_rehydrateOptionsSchema = v1Header_mountOptionsSchema;
 /**
  * Some examples of rehydrate options, used for testing.
  */
-const v1Header_rehydrateOptionsExamples = [...v1Header_mountOptionsExamples] as const;
+const v1Header_rehydrateOptionsExamples = [
+  ...v1Header_mountOptionsExamples,
+] as const satisfies ReadonlyArray<V1Header_RehydrateOptions>;
+
+/**
+ * Examples of the return value from rehydrate(), for testing
+ */
+const v1Header_rehydrateReturnExamples = [
+  ...v1Header_mountReturnExamples,
+] as const satisfies ReadonlyArray<V1Header_RehydrateReturn>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // v1Header_prerender()
@@ -115,7 +134,7 @@ type V1Header_PrerenderReturn = undefined;
  about yet.
  */
 const v1Header_prerenderOptionsSchema = z.looseObject({
-  initialUrlPath: z.string(),
+  initialUrlPath: z.string().nullable(),
 });
 
 /**
@@ -131,23 +150,33 @@ const v1Header_prerenderOptionsExamples = [
   {
     initialUrlPath: '/foo/bar/',
   },
-] as const;
+] as const satisfies ReadonlyArray<V1Header_PrerenderOptions>;
+
+/**
+ * Examples of the return value from prerender(), for testing
+ */
+const v1Header_prerenderReturnExamples = [
+  undefined,
+] as const satisfies ReadonlyArray<V1Header_PrerenderReturn>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type {
   V1Header_MountOptions,
   V1Header_MountReturn,
-  V1Header_RehydrateOptions,
-  V1Header_RehydrateReturn,
   V1Header_PrerenderOptions,
   V1Header_PrerenderReturn,
+  V1Header_RehydrateOptions,
+  V1Header_RehydrateReturn,
 };
 export {
-  v1Header_mountOptionsSchema,
-  v1Header_rehydrateOptionsSchema,
-  v1Header_prerenderOptionsSchema,
   v1Header_mountOptionsExamples,
-  v1Header_rehydrateOptionsExamples,
+  v1Header_mountOptionsSchema,
+  v1Header_mountReturnExamples,
   v1Header_prerenderOptionsExamples,
+  v1Header_prerenderOptionsSchema,
+  v1Header_prerenderReturnExamples,
+  v1Header_rehydrateOptionsExamples,
+  v1Header_rehydrateOptionsSchema,
+  v1Header_rehydrateReturnExamples,
 };

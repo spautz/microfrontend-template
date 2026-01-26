@@ -53,16 +53,22 @@ const ALL_POTENTIAL_V1_ENTRY_POINTS = {
   'en-US': STATUS_PUBLISHED,
   'es-ES': STATUS_PUBLISHED,
   'fr-FR': STATUS_IN_DEVELOPMENT,
-};
+} as const;
 
-const ENTRY_POINTS_FOR_V1_MICROFRONTEND = Object.keys(ALL_POTENTIAL_V1_ENTRY_POINTS) as Array<
-  keyof typeof ALL_POTENTIAL_V1_ENTRY_POINTS
->;
+type V1PotentialEntryPointIdentifier = keyof typeof ALL_POTENTIAL_V1_ENTRY_POINTS;
+type V1PublishedEntryPointIdentifier = {
+  [K in V1PotentialEntryPointIdentifier]: (typeof ALL_POTENTIAL_V1_ENTRY_POINTS)[K] extends typeof STATUS_PUBLISHED
+    ? K
+    : never;
+}[V1PotentialEntryPointIdentifier];
+
+const ENTRY_POINTS_FOR_V1_MICROFRONTEND = Object.keys(
+  ALL_POTENTIAL_V1_ENTRY_POINTS,
+) as V1PotentialEntryPointIdentifier[];
 
 const ENTRY_POINTS_FOR_V1_SDK = ENTRY_POINTS_FOR_V1_MICROFRONTEND.filter(
-  (identifier) =>
-    ALL_POTENTIAL_V1_ENTRY_POINTS[identifier as keyof typeof ALL_POTENTIAL_V1_ENTRY_POINTS] !==
-    STATUS_IN_DEVELOPMENT,
+  (identifier): identifier is V1PublishedEntryPointIdentifier =>
+    ALL_POTENTIAL_V1_ENTRY_POINTS[identifier] === STATUS_PUBLISHED,
 );
 
 /**
