@@ -1,40 +1,41 @@
 /*
  * "Entry points" are the actual remote .js files that the microfrontend provides.
- * Each entry point is a chunk within its build, and each exposes one or more contracts (like `v1Render`).
+ * Each entry point is a chunk within its build, and each exposes one or more functions.
  *
  * In general separate entry points are only needed if you need to *split the build*, to keep
  * the build size down by only loading the code/values you need for a given scope.
  * If you're just adding new functionality then add or update a contract instead.
  *
  * Side note:
- *    It's technically possible for one microfrontend to expose several 'partial' entry points --
+ *    It's technically possible for a microfrontend to expose several 'partial' entry points --
  *    a "utils" and a "components", for example -- but that turns out to be more complicated than
  *    it's worth. Instead, in general EACH entry point should expose ALL of the functionality available.
  *   (I.e., have your "main" entry point export both "utils" and "components", so that you can just
  *    load "main", without mapping and tracking individual functions back to individual entry points.)
- * *
- * Once an entry point has been added it must NEVER be removed, except in a new major version.
+ *
+ * An entry point must NEVER be removed once it's been added, except in a new major version.
  */
 
 /**
- * Part of the module federation setup. This file contains and provides access to all of the
+ * Part of the module federation setup. This file contains and provides access to all
  * entry points exposed by the microfrontend app.
  */
-const REMOTE_MODULE_FILENAME = 'remoteEntry-myheader.js';
+const REMOTE_MODULE_CONTAINER_FILENAME = 'remoteEntry-myheader.js';
 
 /**
- * An identifier that's being built in the microfrontend. These can be accessed in local dev only.
+ * An entry point that's being built in the microfrontend. These can be accessed in local dev only.
  */
 const STATUS_IN_DEVELOPMENT = 1;
 /**
- * An identifier that's been published to consumers, in both the microfrontend and the SDK.
+ * An entry point that's been published to consumers, in both the microfrontend and the SDK.
  */
 const STATUS_PUBLISHED = 2;
 /**
- * A previously-published identifier that we'd like to get rid of -- except you must NEVER remove
+ * A previously-published entry point that we'd like to get rid of -- except you must NEVER remove
  * identifiers. So this just marks them for removal in v2.
  */
-const STATUS_REMOVE_IN_NEXT_MAJOR_VERSION = 3;
+// @TODO: Uncomment once we need this.
+// const STATUS_REMOVE_IN_NEXT_MAJOR_VERSION = 3;
 
 /**
  * The remote entry points (for module federation) exposed by the microfrontend.
@@ -43,7 +44,8 @@ const STATUS_REMOVE_IN_NEXT_MAJOR_VERSION = 3;
  *
  * When adding an item here, also add it to HISTORICAL_V1_FETCH_PARAMS.
  *
- * NEVER REMOVE AN ITEM FROM THIS LIST ONCE IT'S BEEN PUBLISHED!
+ * NEVER REMOVE AN ITEM FROM THIS LIST ONCE IT'S BEEN PUBLISHED! It's okay to stop accessing
+ * a no-longer-needed entry point, but it must remain because old SDK versions may ask for it.
  */
 const ALL_POTENTIAL_V1_ENTRY_POINTS = {
   'de-DE': STATUS_PUBLISHED,
@@ -69,10 +71,7 @@ const ENTRY_POINTS_FOR_V1_SDK = ENTRY_POINTS_FOR_V1_MICROFRONTEND.filter(
 const entryPointValidationRegex = /^[a-z]{2}-[A-Z]{2}$/;
 
 export {
-  REMOTE_MODULE_FILENAME,
-  STATUS_IN_DEVELOPMENT,
-  STATUS_PUBLISHED,
-  STATUS_REMOVE_IN_NEXT_MAJOR_VERSION,
+  REMOTE_MODULE_CONTAINER_FILENAME,
   ENTRY_POINTS_FOR_V1_MICROFRONTEND,
   ENTRY_POINTS_FOR_V1_SDK,
   entryPointValidationRegex,

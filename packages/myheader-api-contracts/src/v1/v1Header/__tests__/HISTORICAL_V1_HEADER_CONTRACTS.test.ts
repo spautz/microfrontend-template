@@ -6,9 +6,9 @@ import {
   ALL_HISTORICAL__V1RenderMilestones,
   ALL_HISTORICAL__V1RenderReturnExamples,
   type ALL_HISTORICAL__V1RenderReturnTypes,
-} from '../HISTORICAL_V1_RENDER_TYPES.ts';
-import { type V1Render, v1Render_argumentsSchema } from '../v1Render.ts';
-import { v1Render_argumentsExamples, v1Render_returnExamples } from './v1Render.test.ts';
+} from '../HISTORICAL_V1_HEADER_CONTRACTS.ts';
+import { type V1Render, v1Render_argumentsSchema } from '../v1HeaderContracts.ts';
+import { v1Render_argumentsExamples, v1Render_returnExamples } from './v1HeaderContracts.test.ts';
 
 // Historical examples must match the historical typings
 

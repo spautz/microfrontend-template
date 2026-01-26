@@ -19,7 +19,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // V1 Render: Arguments & Return
 //
-// Do not use Zod or any other external tools here: you must manually copy over the typings when they change.
+// Do not use Zod or other libraries: you must manually copy over the typings when they change.
 // (This is intentionally painful: you should generally never need to change things once set up.)
 
 /**

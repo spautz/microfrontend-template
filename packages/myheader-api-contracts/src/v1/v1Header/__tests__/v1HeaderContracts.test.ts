@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { type V1Render, v1Render_argumentsSchema } from '../v1Render.ts';
+import { type V1Render, v1Render_argumentsSchema } from '../v1HeaderContracts.ts';
 
 /**
  * Some examples of full arguments to v1's render(), used for testing.
