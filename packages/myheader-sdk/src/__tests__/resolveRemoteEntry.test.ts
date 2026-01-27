@@ -1,49 +1,60 @@
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import * as remoteEntryModule from '../resolveRemoteEntry.ts';
 
-import { resolveRemoteEntry } from '../resolveRemoteEntry.js';
-
-const clearTestGlobals = () => {
-  delete (globalThis as { __mf_test_entryPoint?: string }).__mf_test_entryPoint;
-  delete (globalThis as { __mf_test_share_scope?: Record<string, unknown> }).__mf_test_share_scope;
-  delete (globalThis as { __mf_test_render_called?: boolean }).__mf_test_render_called;
-  delete (globalThis as { __federation_shared__?: Record<string, unknown> }).__federation_shared__;
-};
+const { resolveRemoteEntry } = remoteEntryModule;
 
 describe('resolveRemoteEntry', () => {
   afterEach(() => {
-    clearTestGlobals();
+    vi.restoreAllMocks();
   });
 
-  it('loads the remote entry module and resolves the entry point', async () => {
-    const sharedScope = { react: { singleton: true } };
-    (globalThis as { __federation_shared__?: Record<string, unknown> }).__federation_shared__ =
-      sharedScope;
+  it('loads the entry point for the locale', async () => {
+    const baseUrl = new URL('https://example.com/');
+    const onInitializationError = vi.fn();
+    const v1Header_mount = vi.fn();
+    const entryModule = { v1Header_mount };
+    const factory = vi.fn().mockResolvedValue(entryModule);
+    const container = { get: vi.fn().mockResolvedValue(factory) };
 
-    const cwd = process.cwd();
-    const fixturesRelativePath =
-      path.basename(cwd) === 'myheader-sdk'
-        ? 'src/__tests__/fixtures/'
-        : 'packages/myheader-sdk/src/__tests__/fixtures/';
-    const fixturesPath = path.resolve(cwd, fixturesRelativePath);
-    const baseUrl = pathToFileURL(`${fixturesPath}${path.sep}`);
-    const module = await resolveRemoteEntry(baseUrl, { locale: 'en-US' });
+    const loadRemoteEntry = vi
+      .fn()
+      .mockResolvedValue(
+        container as Awaited<ReturnType<typeof remoteEntryModule.loadRemoteEntryContainer>>,
+      );
 
-    expect((globalThis as { __mf_test_entryPoint?: string }).__mf_test_entryPoint).toBe('./en-US');
-    expect(
-      (globalThis as { __mf_test_share_scope?: Record<string, unknown> }).__mf_test_share_scope,
-    ).toBe(sharedScope);
-    expect(typeof module.v1Render).toBe('function');
-
-    const updateCallback = module.v1Render({
-      rootElement: document.createElement('div'),
-      initialUrlPath: '/',
-    });
-
-    expect((globalThis as { __mf_test_render_called?: boolean }).__mf_test_render_called).toBe(
-      true,
+    const result = await resolveRemoteEntry(
+      {
+        baseUrl,
+        onInitializationError,
+        locale: 'en-GB',
+      },
+      loadRemoteEntry,
     );
-    expect(typeof updateCallback).toBe('function');
+
+    expect(loadRemoteEntry).toHaveBeenCalledWith(baseUrl);
+    expect(container.get).toHaveBeenCalledWith('./en-GB');
+    expect(factory).toHaveBeenCalled();
+    expect(result).toBe(entryModule);
+  });
+
+  it('reports initialization errors and rethrows', async () => {
+    const baseUrl = new URL('https://example.com/');
+    const onInitializationError = vi.fn();
+    const failure = new Error('boom');
+
+    const loadRemoteEntry = vi.fn().mockRejectedValue(failure);
+
+    await expect(
+      resolveRemoteEntry(
+        {
+          baseUrl,
+          onInitializationError,
+          locale: 'en-US',
+        },
+        loadRemoteEntry,
+      ),
+    ).rejects.toThrow('boom');
+
+    expect(onInitializationError).toHaveBeenCalledWith('Could not resolve remote entry', failure);
   });
 });

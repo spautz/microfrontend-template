@@ -95,7 +95,7 @@
     },
     {
       "path": "./dist/esm/index.js",
-      "import": "{ renderHeader }",
+      "import": "{ mountHeader }",
       "limit": "75 KB"
     }
   ]

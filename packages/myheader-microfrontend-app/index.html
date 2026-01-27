@@ -25,7 +25,7 @@
 
   <script type="module">
     // biome-ignore-all lint/suspicious/noConsole: Console logs/warnings/errors are fine for local dev
-    import { convertV1FetchParamsToEntryPoint, ENTRY_POINTS_FOR_V1_MICROFRONTEND, V1_DEFAULT_LOCALE } from "@spautz/header-api-contracts";
+    import { convertV1FetchParamsToEntryPoint, ENTRY_POINTS_FOR_V1_MICROFRONTEND, V1_DEFAULT_LOCALE } from "@spautz/header-api-contracts/v1";
 
     // For local dev, pull fetchParams (locale) from the URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -36,20 +36,20 @@
     // from the MFE's modules.
     const AVAILABLE_MODES = {
       /**
-       * `v1Render` mounts a React app into a target element
+       * `v1Header_mount` mounts a React app into a target element
        */
-      v1Render: (browserEntry, _serverEntry) => {
-        browserEntry.v1Render({
+      v1Header_mount: (browserEntry, _serverEntry) => {
+        browserEntry.v1Header_mount({
           rootElement,
           initialUrlPath: window.location.pathname
         });
       },
       /**
-       * `v1Prerender` shows the raw html from a prerender
+       * `v1Header_prerender` shows the raw html from a prerender
        */
-      v1Prerender: async (_browserEntry, serverEntry) => {
+      v1Header_prerender: async (_browserEntry, serverEntry) => {
         // Dump the raw prerender html on-screen
-        const html = await serverEntry.v1Prerender({
+        const html = await serverEntry.v1Header_prerender({
           initialUrlPath: window.location.pathname
         });
         rootElement.innerHTML = `

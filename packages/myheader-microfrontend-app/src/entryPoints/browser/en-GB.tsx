@@ -1,9 +1,18 @@
-import { v1RenderWithEntryPointValues } from '../../v1Render/v1Render.js';
+import {
+  v1Header_mountWithEntryPointValues,
+  v1Header_rehydrateWithEntryPointValues,
+} from '../../v1Header/v1HeaderMount.js';
 
 import { getLinkLabels } from '../commonData/en-GB.js';
 
-console.log('Browser entry: en-GB');
+if (process.env.NODE_ENV !== 'production') {
+  // biome-ignore lint/suspicious/noConsole: This is for local dev only
+  console.log('Browser entry: en-GB');
+}
 
-const v1Render = v1RenderWithEntryPointValues.bind(null, { linkLabels: await getLinkLabels() });
+const entryPointValues = { linkLabels: await getLinkLabels() };
 
-export { v1Render };
+const v1Header_mount = v1Header_mountWithEntryPointValues.bind(null, entryPointValues);
+const v1Header_rehydrate = v1Header_rehydrateWithEntryPointValues.bind(null, entryPointValues);
+
+export { v1Header_mount, v1Header_rehydrate };

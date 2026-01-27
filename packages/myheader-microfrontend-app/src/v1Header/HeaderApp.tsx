@@ -2,12 +2,12 @@ import React from 'react';
 import { Header, type HeaderProps } from './Header/Header.js';
 import { UrlPathProvider } from './UrlPathContext/UrlPathContext.js';
 
-interface ValuesForV1Render {
+interface V1HeaderEntryPointValues {
   linkLabels: HeaderProps['linkLabels'];
 }
 
 interface HeaderAppProps {
-  entryPointValues: ValuesForV1Render;
+  entryPointValues: V1HeaderEntryPointValues;
   initialUrlPath: string;
 }
 

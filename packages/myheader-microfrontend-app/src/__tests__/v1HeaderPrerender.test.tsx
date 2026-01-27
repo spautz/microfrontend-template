@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { v1PrerenderWithEntryPointValues } from '../v1Render/v1Prerender.js';
+import { v1Header_prerenderWithEntryPointValues } from '../v1Header/v1HeaderPrerender.js';
 
-describe('v1PrerenderWithEntryPointValues', () => {
+describe('v1Header_prerenderWithEntryPointValues', () => {
   it('returns static markup with the header labels', async () => {
     const linkLabels = {
       siteTitle: 'Header Title',
@@ -14,9 +14,9 @@ describe('v1PrerenderWithEntryPointValues', () => {
       water: 'Water',
     };
 
-    const markup = await v1PrerenderWithEntryPointValues(
+    const markup = await v1Header_prerenderWithEntryPointValues(
       { linkLabels },
-      { rootElement: document.createElement('div'), initialUrlPath: '/home' },
+      { initialUrlPath: '/home' },
     );
 
     expect(markup).toContain(linkLabels.siteTitle);

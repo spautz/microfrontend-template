@@ -5,7 +5,7 @@ import {
   setUrlPath,
   UrlPathProvider,
   useUrlPath,
-} from '../v1Render/UrlPathContext/UrlPathContext.js';
+} from '../v1Header/UrlPathContext/UrlPathContext.js';
 
 const UrlPathViewer = () => {
   const urlPath = useUrlPath();

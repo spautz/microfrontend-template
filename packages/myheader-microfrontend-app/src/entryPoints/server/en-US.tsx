@@ -1,10 +1,13 @@
-import { v1PrerenderWithEntryPointValues } from '../../v1Render/v1Prerender.js';
+import { v1Header_prerenderWithEntryPointValues } from '../../v1Header/v1HeaderPrerender.js';
 import { getLinkLabels } from '../commonData/en-US.js';
 
-console.log('Server entry: en-US');
+if (process.env.NODE_ENV !== 'production') {
+  // biome-ignore lint/suspicious/noConsole: This is for local dev only
+  console.log('Server entry: en-US');
+}
 
-const v1Prerender = v1PrerenderWithEntryPointValues.bind(null, {
+const v1Header_prerender = v1Header_prerenderWithEntryPointValues.bind(null, {
   linkLabels: await getLinkLabels(),
 });
 
-export { v1Prerender };
+export { v1Header_prerender };

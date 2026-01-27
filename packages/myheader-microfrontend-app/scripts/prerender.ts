@@ -1,11 +1,11 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { ENTRY_POINTS_FOR_V1_MICROFRONTEND } from '@spautz/header-api-contracts';
+import { ENTRY_POINTS_FOR_V1_MICROFRONTEND } from '@spautz/header-api-contracts/v1';
 import { createServer } from 'vite';
 
-type V1Prerender = (options: { initialUrlPath: string }) => Promise<string> | string;
-type PrerenderModule = { v1Prerender?: V1Prerender };
+type V1HeaderPrerender = (options: { initialUrlPath: string }) => Promise<string> | string;
+type PrerenderModule = { v1Header_prerender?: V1HeaderPrerender };
 
 const root = process.cwd();
 const outputDir = path.join(root, 'dist', 'prerender');
@@ -25,13 +25,13 @@ try {
     const entryModule = (await server.ssrLoadModule(
       `/src/entryPoints/server/${entryPoint}.tsx`,
     )) as PrerenderModule;
-    const { v1Prerender } = entryModule;
+    const v1HeaderPrerender = entryModule.v1Header_prerender;
 
-    if (typeof v1Prerender !== 'function') {
-      throw new Error(`Missing v1Prerender export in entryPoints/server/${entryPoint}.tsx`);
+    if (typeof v1HeaderPrerender !== 'function') {
+      throw new Error(`Missing v1Header_prerender export in entryPoints/server/${entryPoint}.tsx`);
     }
 
-    const html = await v1Prerender({ initialUrlPath: '/' });
+    const html = await v1HeaderPrerender({ initialUrlPath: '/' });
     await writeFile(path.join(outputDir, `${entryPoint}.html`), `${html}\n`, 'utf8');
   }
 } finally {

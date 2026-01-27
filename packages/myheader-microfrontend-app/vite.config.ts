@@ -4,8 +4,8 @@ import { extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import federation from '@originjs/vite-plugin-federation';
 import {
   ENTRY_POINTS_FOR_V1_MICROFRONTEND,
-  REMOTE_MODULE_FILENAME,
-} from '@spautz/header-api-contracts';
+  REMOTE_MODULE_CONTAINER_FILENAME,
+} from '@spautz/header-api-contracts/v1';
 import react from '@vitejs/plugin-react';
 import { type Connect, defineConfig } from 'vite';
 
@@ -140,7 +140,7 @@ export default defineConfig({
     }),
     federation({
       name: 'myheader-mfe',
-      filename: REMOTE_MODULE_FILENAME,
+      filename: REMOTE_MODULE_CONTAINER_FILENAME,
       exposes: entryPoints,
       shared: {
         react: { requiredVersion: '18' },
