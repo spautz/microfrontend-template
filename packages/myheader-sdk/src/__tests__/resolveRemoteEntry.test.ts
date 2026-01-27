@@ -1,37 +1,37 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import * as remoteEntryModule from '../resolveRemoteEntry.ts';
+import { loadRemoteEntryContainer } from '../loadRemoteEntryContainer.ts';
+import { resolveRemoteEntry } from '../resolveRemoteEntry.ts';
 
-const { resolveRemoteEntry } = remoteEntryModule;
+vi.mock('../loadRemoteEntryContainer.ts', () => ({
+  loadRemoteEntryContainer: vi.fn(),
+}));
 
 describe('resolveRemoteEntry', () => {
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   it('loads the entry point for the locale', async () => {
     const baseUrl = new URL('https://example.com/');
     const onInitializationError = vi.fn();
     const v1Header_mount = vi.fn();
-    const entryModule = { v1Header_mount };
+    const v1Header_rehydrate = vi.fn();
+    const v1Header_prerender = vi.fn();
+    const entryModule = { v1Header_mount, v1Header_rehydrate, v1Header_prerender };
     const factory = vi.fn().mockResolvedValue(entryModule);
     const container = { get: vi.fn().mockResolvedValue(factory) };
 
-    const loadRemoteEntry = vi
-      .fn()
-      .mockResolvedValue(
-        container as Awaited<ReturnType<typeof remoteEntryModule.loadRemoteEntryContainer>>,
-      );
-
-    const result = await resolveRemoteEntry(
-      {
-        baseUrl,
-        onInitializationError,
-        locale: 'en-GB',
-      },
-      loadRemoteEntry,
+    vi.mocked(loadRemoteEntryContainer).mockResolvedValue(
+      container as Awaited<ReturnType<typeof loadRemoteEntryContainer>>,
     );
 
-    expect(loadRemoteEntry).toHaveBeenCalledWith(baseUrl);
+    const result = await resolveRemoteEntry({
+      baseUrl,
+      onInitializationError,
+      locale: 'en-GB',
+    });
+
+    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl);
     expect(container.get).toHaveBeenCalledWith('./en-GB');
     expect(factory).toHaveBeenCalled();
     expect(result).toBe(entryModule);
@@ -42,17 +42,14 @@ describe('resolveRemoteEntry', () => {
     const onInitializationError = vi.fn();
     const failure = new Error('boom');
 
-    const loadRemoteEntry = vi.fn().mockRejectedValue(failure);
+    vi.mocked(loadRemoteEntryContainer).mockRejectedValue(failure);
 
     await expect(
-      resolveRemoteEntry(
-        {
-          baseUrl,
-          onInitializationError,
-          locale: 'en-US',
-        },
-        loadRemoteEntry,
-      ),
+      resolveRemoteEntry({
+        baseUrl,
+        onInitializationError,
+        locale: 'en-US',
+      }),
     ).rejects.toThrow('boom');
 
     expect(onInitializationError).toHaveBeenCalledWith('Could not resolve remote entry', failure);

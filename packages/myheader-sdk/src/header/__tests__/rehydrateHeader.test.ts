@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { throwAndFailTest } from '../../__tests__/testUtils.ts';
 import { resolveRemoteEntry } from '../../resolveRemoteEntry.ts';
-import { mountHeader } from '../mountHeader.ts';
+import { rehydrateHeader } from '../rehydrateHeader.ts';
 
 vi.mock('../../resolveRemoteEntry.ts', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../resolveRemoteEntry.ts')>();
@@ -11,7 +11,7 @@ vi.mock('../../resolveRemoteEntry.ts', async (importOriginal) => {
   };
 });
 
-describe('mountHeader', () => {
+describe('rehydrateHeader', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
@@ -19,15 +19,17 @@ describe('mountHeader', () => {
   it('resolves the remote entry using baseUrl and locale', async () => {
     const baseUrl = new URL('https://example.com/');
     const rootElement = document.createElement('div');
-    const v1Header_mount = vi.fn().mockReturnValue({ setNewOptions: vi.fn(), unmount: vi.fn() });
+    const v1Header_rehydrate = vi
+      .fn()
+      .mockReturnValue({ setNewOptions: vi.fn(), unrehydrate: vi.fn() });
 
     vi.mocked(resolveRemoteEntry).mockResolvedValue({
+      v1Header_mount: vi.fn(),
       v1Header_prerender: vi.fn(),
-      v1Header_rehydrate: vi.fn(),
-      v1Header_mount,
+      v1Header_rehydrate,
     });
 
-    await mountHeader({
+    await rehydrateHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
       locale: 'en-US',
@@ -42,7 +44,7 @@ describe('mountHeader', () => {
         onInitializationError: throwAndFailTest,
       }),
     );
-    expect(v1Header_mount).toHaveBeenCalledWith(
+    expect(v1Header_rehydrate).toHaveBeenCalledWith(
       expect.objectContaining({
         rootElement,
         initialUrlPath: null,
@@ -55,17 +57,17 @@ describe('mountHeader', () => {
     const rootElement = document.createElement('div');
     const onNavLinkClick = vi.fn();
     const setNewOptions = vi.fn();
-    const unmount = vi.fn();
-    const mountResult = { setNewOptions, unmount };
-    const v1Header_mount = vi.fn().mockReturnValue(mountResult);
+    const unrehydrate = vi.fn();
+    const rehydrateResult = { setNewOptions, unrehydrate };
+    const v1Header_rehydrate = vi.fn().mockReturnValue(rehydrateResult);
 
     vi.mocked(resolveRemoteEntry).mockResolvedValue({
+      v1Header_mount: vi.fn(),
       v1Header_prerender: vi.fn(),
-      v1Header_rehydrate: vi.fn(),
-      v1Header_mount,
+      v1Header_rehydrate,
     });
 
-    const result = await mountHeader({
+    const result = await rehydrateHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
       locale: 'en-GB',
@@ -74,11 +76,11 @@ describe('mountHeader', () => {
       onNavLinkClick,
     });
 
-    expect(v1Header_mount).toHaveBeenCalledWith({
+    expect(v1Header_rehydrate).toHaveBeenCalledWith({
       rootElement,
       initialUrlPath: '/drinks',
       onNavLinkClick,
     });
-    expect(result).toBe(mountResult);
+    expect(result).toBe(rehydrateResult);
   });
 });
