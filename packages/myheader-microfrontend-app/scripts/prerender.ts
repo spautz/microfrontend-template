@@ -8,7 +8,7 @@ type V1HeaderPrerender = (options: { initialUrlPath: string }) => Promise<string
 type PrerenderModule = { v1Header_prerender?: V1HeaderPrerender };
 
 const root = process.cwd();
-const outputDir = path.join(root, 'dist', 'prerender');
+const outputDir = path.join(root, 'dist', 'prerenders');
 
 const server = await createServer({
   root,

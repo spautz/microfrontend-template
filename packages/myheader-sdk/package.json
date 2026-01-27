@@ -40,6 +40,16 @@
         "default": "./dist/cjs/index.cjs"
       }
     },
+    "./server": {
+      "import": {
+        "types": "./dist/esm/server.d.ts",
+        "default": "./dist/esm/server.js"
+      },
+      "require": {
+        "types": "./dist/cjs/server.d.cts",
+        "default": "./dist/cjs/server.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/cjs/index.cjs",

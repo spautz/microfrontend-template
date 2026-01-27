@@ -1,0 +1,27 @@
+@layer myheader-microfrontend-app {
+  .header {
+    display: grid;
+    align-items: baseline;
+
+    /* 8px at 1200, 16px at 1600 */
+    --_vertical-padding: clamp(0.5rem, -1rem + 2vw, 1rem);
+    padding-top: var(--_vertical-padding);
+    padding-bottom: calc(2 * var(--_vertical-padding));
+    width: 100%;
+    margin: 0 auto;
+
+    @media (min-width: 750px) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    a {
+      display: inline-block;
+      color: inherit;
+      text-decoration: none;
+
+      @media (scripting: none) {
+        transition-duration: 0s;
+      }
+    }
+  }
+}

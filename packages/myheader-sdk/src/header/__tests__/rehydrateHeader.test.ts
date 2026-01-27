@@ -32,6 +32,7 @@ describe('rehydrateHeader', () => {
     await rehydrateHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-US',
       rootElement,
       initialUrlPath: null,
@@ -70,6 +71,7 @@ describe('rehydrateHeader', () => {
     const result = await rehydrateHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',
       rootElement,
       initialUrlPath: '/drinks',

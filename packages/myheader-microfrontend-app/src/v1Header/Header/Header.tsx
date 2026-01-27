@@ -10,11 +10,13 @@ interface HeaderProps {
   };
 }
 
+import classes from './Header.module.css';
+
 const Header: React.FC<HeaderProps> = (props) => {
   const { linkLabels } = props;
 
   return (
-    <header>
+    <header className={classes.header}>
       <h1>{linkLabels.siteTitle}</h1>
       <nav>
         <ul>

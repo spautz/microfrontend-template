@@ -127,7 +127,7 @@ const v1Header_rehydrateReturnExamples = [
 
 interface V1Header_PrerenderOptions extends V1Header_BaseOptions {}
 
-type V1Header_PrerenderReturn = undefined;
+type V1Header_PrerenderReturn = string;
 
 /**
  Schemas are loose to allow future options: a caller is allowed to pass things we don't know
@@ -156,7 +156,8 @@ const v1Header_prerenderOptionsExamples = [
  * Examples of the return value from prerender(), for testing
  */
 const v1Header_prerenderReturnExamples = [
-  undefined,
+  '',
+  '<div>Hello</div>',
 ] as const satisfies ReadonlyArray<V1Header_PrerenderReturn>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

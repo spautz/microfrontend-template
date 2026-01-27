@@ -157,7 +157,7 @@ type HISTORICAL__V1HeaderPrerenderOptions__ORIGINAL = {
   initialUrlPath: string | null;
 };
 
-type HISTORICAL__V1HeaderPrerenderReturn__ORIGINAL = undefined;
+type HISTORICAL__V1HeaderPrerenderReturn__ORIGINAL = string;
 
 // This structure tracks types + examples as a single unit, to make bulk tests easier.
 const HISTORICAL__v1HeaderPrerender__ORIGINAL = {
@@ -176,7 +176,8 @@ const HISTORICAL__v1HeaderPrerender__ORIGINAL = {
     },
   ] as const satisfies ReadonlyArray<HISTORICAL__V1HeaderPrerenderOptions__ORIGINAL>,
   returnExamples: [
-    undefined,
+    '',
+    '<div>Hello</div>',
   ] as const satisfies ReadonlyArray<HISTORICAL__V1HeaderPrerenderReturn__ORIGINAL>,
 } as const;
 

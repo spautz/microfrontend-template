@@ -12,6 +12,6 @@ describe('App', () => {
   it('Renders without error', () => {
     render(<App />);
 
-    expect(screen.getByText('Vite + React')).toBeVisible();
+    expect(screen.getByText('This is Vite\'s "Hello World"')).toBeVisible();
   });
 });

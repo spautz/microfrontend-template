@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadRemoteEntryContainer } from '../loadRemoteEntryContainer.ts';
 import { resolveRemoteEntry } from '../resolveRemoteEntry.ts';
+import { throwAndFailTest } from './testUtils.ts';
 
 vi.mock('../loadRemoteEntryContainer.ts', () => ({
   loadRemoteEntryContainer: vi.fn(),
@@ -13,7 +14,6 @@ describe('resolveRemoteEntry', () => {
 
   it('loads the entry point for the locale', async () => {
     const baseUrl = new URL('https://example.com/');
-    const onInitializationError = vi.fn();
     const v1Header_mount = vi.fn();
     const v1Header_rehydrate = vi.fn();
     const v1Header_prerender = vi.fn();
@@ -27,7 +27,8 @@ describe('resolveRemoteEntry', () => {
 
     const result = await resolveRemoteEntry({
       baseUrl,
-      onInitializationError,
+      onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',
     });
 
@@ -48,6 +49,7 @@ describe('resolveRemoteEntry', () => {
       resolveRemoteEntry({
         baseUrl,
         onInitializationError,
+        onUncaughtRuntimeError: throwAndFailTest,
         locale: 'en-US',
       }),
     ).rejects.toThrow('boom');

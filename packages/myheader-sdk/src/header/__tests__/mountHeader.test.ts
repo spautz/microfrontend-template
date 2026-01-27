@@ -30,6 +30,7 @@ describe('mountHeader', () => {
     await mountHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-US',
       rootElement,
       initialUrlPath: null,
@@ -68,6 +69,7 @@ describe('mountHeader', () => {
     const result = await mountHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',
       rootElement,
       initialUrlPath: '/drinks',

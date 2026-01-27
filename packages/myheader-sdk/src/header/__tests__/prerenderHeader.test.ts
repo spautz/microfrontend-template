@@ -31,6 +31,7 @@ describe('prerenderHeader', () => {
     await prerenderHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-US',
       initialUrlPath: null,
     });
@@ -65,6 +66,7 @@ describe('prerenderHeader', () => {
     const result = await prerenderHeader({
       baseUrl,
       onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',
       initialUrlPath: '/drinks',
     });
