@@ -69,6 +69,7 @@ function prerenderHeaderVitePlugin(pluginOptions: {
 
       try {
         headerHtml = (await getPrerenderedHeader(optionsForHeaderPrerender)) as string;
+        this.info(`Using prerender from ${headerBaseUrl}`);
       } catch (error) {
         this.warn(`Could not resolve prerender from ${headerBaseUrl}: ${error}`);
         if (!ENABLE_LOCAL_FALLBACK_FOR_HEADER) {

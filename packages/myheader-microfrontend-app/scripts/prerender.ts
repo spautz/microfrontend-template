@@ -23,7 +23,7 @@ try {
 
   for (const entryPoint of ENTRY_POINTS_FOR_V1_MICROFRONTEND) {
     const entryModule = (await server.ssrLoadModule(
-      `/src/entryPoints/server/${entryPoint}.tsx`,
+      `/src/entryPoints/prerender/${entryPoint}.tsx`,
     )) as PrerenderModule;
     const v1HeaderPrerender = entryModule.v1Header_prerender;
 

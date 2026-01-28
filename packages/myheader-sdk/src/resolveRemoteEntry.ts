@@ -8,6 +8,7 @@ import {
   type V1Header_RehydrateOptions,
   type V1Header_RehydrateReturn,
 } from '@spautz/header-api-contracts/v1';
+import { ensureHeaderStyles } from './header/ensureHeaderStyles.ts';
 import { loadRemoteEntryContainer } from './loadRemoteEntryContainer.ts';
 import { convertCaughtValueToError } from './utils.ts';
 
@@ -16,18 +17,14 @@ import { convertCaughtValueToError } from './utils.ts';
  * All top-level functions exported by the SDK should accept these
  * (in the same options object as FetchParams and any function-specific options)
  */
-type SDKEntryParams = {
+type InitializationParams = {
   baseUrl: string | URL;
   onInitializationError: (message: string, error?: Error) => void;
   onUncaughtRuntimeError: (error?: Error) => void;
   sharedDependencies?: Record<string, unknown>;
 };
 
-type SDKEntryAndFetchParams = SDKEntryParams & V1FetchParams;
-type OtherOptions<T extends SDKEntryAndFetchParams> = Omit<
-  T,
-  keyof SDKEntryParams | keyof V1FetchParams
->;
+type InitializationAndFetchParams = InitializationParams & V1FetchParams;
 
 type ExportsFromRemoteEntryModule = {
   v1Header_mount: (options: V1Header_MountOptions) => V1Header_MountReturn;
@@ -35,9 +32,13 @@ type ExportsFromRemoteEntryModule = {
   v1Header_prerender: (options: V1Header_PrerenderOptions) => V1Header_PrerenderReturn;
 };
 
-const separateFetchParamsFromOtherOptions = <T extends SDKEntryAndFetchParams>(
+const separateFetchParamsFromOtherOptions = <T extends InitializationAndFetchParams>(
   allOptions: T,
-): [SDKEntryParams, V1FetchParams, OtherOptions<T>] => {
+): [
+  InitializationParams,
+  V1FetchParams,
+  Omit<T, keyof InitializationParams | keyof V1FetchParams>,
+] => {
   const {
     baseUrl,
     onInitializationError,
@@ -46,7 +47,7 @@ const separateFetchParamsFromOtherOptions = <T extends SDKEntryAndFetchParams>(
     sharedDependencies = {},
     ...otherOptions
   } = allOptions;
-  const sdkEntryParams = {
+  const initializationParams = {
     baseUrl,
     onInitializationError,
     onUncaughtRuntimeError,
@@ -54,22 +55,25 @@ const separateFetchParamsFromOtherOptions = <T extends SDKEntryAndFetchParams>(
   };
   const fetchParams = { locale };
 
-  return [sdkEntryParams, fetchParams, otherOptions];
+  return [initializationParams, fetchParams, otherOptions];
 };
 
 const resolveRemoteEntry = async (
-  allOptions: SDKEntryAndFetchParams,
+  allOptions: InitializationAndFetchParams,
 ): Promise<ExportsFromRemoteEntryModule> => {
-  const [sdkEntryParams, fetchParams] = separateFetchParamsFromOtherOptions(allOptions);
+  const [initializationParams, fetchParams] = separateFetchParamsFromOtherOptions(allOptions);
 
   const {
     baseUrl,
     onInitializationError,
     sharedDependencies: _sharedDependencies,
-  } = sdkEntryParams;
+  } = initializationParams;
 
   try {
     const entryPointIdentifier = convertV1FetchParamsToEntryPoint(fetchParams);
+    await ensureHeaderStyles({ baseUrl, entryPointIdentifier }).catch((error) => {
+      onInitializationError('Could not preload header styles', error);
+    });
     const entryPoint = `./${entryPointIdentifier}`;
 
     const container = await loadRemoteEntryContainer(baseUrl);
@@ -85,11 +89,13 @@ const resolveRemoteEntry = async (
 };
 
 const getRemoteEntryPointIdentifier = (options: V1FetchParams) => {
-  const [, fetchParams] = separateFetchParamsFromOtherOptions(options as SDKEntryAndFetchParams);
+  const [, fetchParams] = separateFetchParamsFromOtherOptions(
+    options as InitializationAndFetchParams,
+  );
   return convertV1FetchParamsToEntryPoint(fetchParams);
 };
 
-export type { SDKEntryParams, SDKEntryAndFetchParams };
+export type { InitializationParams, InitializationAndFetchParams };
 export {
   getRemoteEntryPointIdentifier,
   loadRemoteEntryContainer,

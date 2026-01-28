@@ -1,5 +1,5 @@
 import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import federation from '@originjs/vite-plugin-federation';
 import {
@@ -116,21 +116,105 @@ const createDistMiddleware = (basePath: string, rootDir: string) => {
   };
 };
 
+type ViteManifestEntry = {
+  file: string;
+  css?: string[];
+  imports?: string[];
+};
+
+type AssetInclude = {
+  css: string[];
+  js: string[];
+};
+
+const isJavascriptFile = (filePath: string): boolean => {
+  const extension = extname(filePath).toLowerCase();
+  return extension === '.js' || extension === '.mjs';
+};
+
+const collectAssetsForManifestKey = (
+  manifest: Record<string, ViteManifestEntry>,
+  entryKey: string,
+): AssetInclude => {
+  const visited = new Set<string>();
+  const cssFiles = new Set<string>();
+  const jsFiles = new Set<string>();
+
+  const visit = (key: string) => {
+    if (visited.has(key)) {
+      return;
+    }
+    visited.add(key);
+
+    const entry = manifest[key];
+    if (!entry) {
+      return;
+    }
+
+    entry.imports?.forEach(visit);
+    entry.css?.forEach((file) => {
+      cssFiles.add(file);
+    });
+    if (isJavascriptFile(entry.file)) {
+      jsFiles.add(entry.file);
+    }
+  };
+
+  visit(entryKey);
+  return { css: Array.from(cssFiles), js: Array.from(jsFiles) };
+};
+
+const buildAssetInclude = () => ({
+  name: 'emit-asset-include',
+  apply: 'build',
+  async closeBundle() {
+    const manifestPath = resolve(distRoot, '.vite', 'manifest.json');
+    const manifestRaw = await readFile(manifestPath, 'utf8');
+    const manifest = JSON.parse(manifestRaw) as Record<string, ViteManifestEntry>;
+
+    const assetIncludeRoot = resolve(distRoot, 'asset-include');
+    await mkdir(assetIncludeRoot, { recursive: true });
+
+    for (const entryPoint of ENTRY_POINTS_FOR_V1_MICROFRONTEND) {
+      const entryKey = `src/entryPoints/browser/${entryPoint}.tsx`;
+      const assets = collectAssetsForManifestKey(manifest, entryKey);
+
+      if (assets.css.length === 0 && assets.js.length === 0 && !manifest[entryKey]) {
+        this.warn(`Missing manifest entry for ${entryKey}`);
+      }
+
+      const jsonPath = resolve(assetIncludeRoot, `${entryPoint}.json`);
+      const headHtmlPath = resolve(assetIncludeRoot, `${entryPoint}-head.html`);
+      const prefetchHtmlPath = resolve(assetIncludeRoot, `${entryPoint}-prefetch.html`);
+
+      const jsonPayload = JSON.stringify(assets, null, 2);
+      await writeFile(jsonPath, `${jsonPayload}\n`, 'utf8');
+
+      const headLinks = [
+        ...assets.css.map((file) => `<link rel="stylesheet" href="${file}">`),
+        ...assets.js.map((file) => `<link rel="modulepreload" href="${file}">`),
+      ].join('\n');
+      await writeFile(headHtmlPath, headLinks ? `${headLinks}\n` : '', 'utf8');
+
+      const prefetchLinks = [
+        ...assets.css.map((file) => `<link rel="prefetch" as="style" href="${file}">`),
+        ...assets.js.map((file) => `<link rel="prefetch" as="script" href="${file}">`),
+      ].join('\n');
+      await writeFile(prefetchHtmlPath, prefetchLinks ? `${prefetchLinks}\n` : '', 'utf8');
+    }
+  },
+});
+
 const distRoot = resolve(__dirname, 'dist');
 const distAssetsRoot = resolve(distRoot, 'assets');
 const distPrerendersRoot = resolve(distRoot, 'prerenders');
+const distAssetIncludeRoot = resolve(distRoot, 'asset-include');
 
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
     manifest: true,
     sourcemap: true,
-    rollupOptions: {
-      input: {
-        // Main entry point
-        default: resolve(__dirname, 'index.html'),
-      },
-    },
   },
   plugins: [
     react({
@@ -147,10 +231,12 @@ export default defineConfig({
         'react-dom': { requiredVersion: '18' },
       },
     }),
+    buildAssetInclude(),
     {
       name: 'serve-dist-artifacts',
       configureServer(server) {
         server.middlewares.use(createDistMiddleware('/assets', distAssetsRoot));
+        server.middlewares.use(createDistMiddleware('/asset-include', distAssetIncludeRoot));
         server.middlewares.use(createDistMiddleware('/prerenders', distPrerendersRoot));
       },
     },
