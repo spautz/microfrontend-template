@@ -13,10 +13,10 @@ import { buildPrerenderedHeaderUrl } from './buildPrerenderedHeaderUrl.ts';
 // This should be `baseUrl` + `fetchParams` + the options for v1Header_prerender()
 // The keys are duplicated here (instead of inherited from those places) so that we'll get
 // an error if something changes unexpectedly.
-type AllGetPrerenderedHeaderOptions = SDKEntryAndFetchParams & V1Header_PrerenderOptions;
+type OptionsForGetPrerenderedHeader = SDKEntryAndFetchParams & V1Header_PrerenderOptions;
 
 const getPrerenderedHeader = async (
-  options: AllGetPrerenderedHeaderOptions,
+  options: OptionsForGetPrerenderedHeader,
 ): Promise<V1Header_PrerenderReturn | Error> => {
   const [sdkEntryParams, fetchParams, prerenderOptions] =
     separateFetchParamsFromOtherOptions(options);
@@ -42,4 +42,5 @@ const getPrerenderedHeader = async (
   }
 };
 
+export type { OptionsForGetPrerenderedHeader };
 export { getPrerenderedHeader };

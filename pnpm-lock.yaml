@@ -39,6 +39,9 @@ catalogs:
     '@vitest/ui':
       specifier: 4.0.16
       version: 4.0.16
+    glob:
+      specifier: 13.0.0
+      version: 13.0.0
     publint:
       specifier: 0.3.16
       version: 0.3.16
@@ -98,7 +101,7 @@ importers:
         specifier: 0.3.0
         version: 0.3.0(@changesets/cli@2.29.8(@types/node@24.1.0))
       glob:
-        specifier: 13.0.0
+        specifier: 'catalog:'
         version: 13.0.0
       husky:
         specifier: 9.1.7
@@ -109,9 +112,6 @@ importers:
       lint-staged:
         specifier: 16.2.7
         version: 16.2.7
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
       only-allow:
         specifier: 1.2.2
         version: 1.2.2
@@ -257,6 +257,9 @@ importers:
       '@size-limit/file':
         specifier: 'catalog:'
         version: 12.0.0(size-limit@12.0.0(jiti@2.6.1))
+      glob:
+        specifier: 'catalog:'
+        version: 13.0.0
       publint:
         specifier: 'catalog:'
         version: 0.3.16
@@ -1932,10 +1935,6 @@ packages:
   log-update@6.1.0:
     resolution: {integrity: sha512-9ie8ItPR6tjY5uYJh8K/Zrv/RMZ5VOlOWvtZdEHYSTFKZfIBPQa9tOAEeAWhd+AnIneLJ22w5fjOYtoutpWq5w==}
     engines: {node: '>=18'}
-
-  lru-cache@11.2.2:
-    resolution: {integrity: sha512-F9ODfyqML2coTIsQpSkRHnLSZMtkU8Q+mSfcaIyKwy58u+8k5nvAYeiNhsyMARvzNcXJ9QfWVrcPsC9e9rAxtg==}
-    engines: {node: 20 || >=22}
 
   lru-cache@11.2.4:
     resolution: {integrity: sha512-B5Y16Jr9LB9dHVkh6ZevG+vAbOsNOYCX+sXvFWFu7B3Iz5mijW3zdbMyhsh8ANd2mSWBYdJgnqi+mL7/LrOPYg==}
@@ -4390,8 +4389,6 @@ snapshots:
       strip-ansi: 7.1.2
       wrap-ansi: 9.0.2
 
-  lru-cache@11.2.2: {}
-
   lru-cache@11.2.4: {}
 
   lru-cache@5.1.1:
@@ -4590,7 +4587,7 @@ snapshots:
 
   path-scurry@2.0.0:
     dependencies:
-      lru-cache: 11.2.2
+      lru-cache: 11.2.4
       minipass: 7.1.2
 
   path-type@4.0.0: {}

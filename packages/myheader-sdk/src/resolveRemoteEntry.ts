@@ -84,5 +84,15 @@ const resolveRemoteEntry = async (
   }
 };
 
+const getRemoteEntryPointIdentifier = (options: V1FetchParams) => {
+  const [, fetchParams] = separateFetchParamsFromOtherOptions(options as SDKEntryAndFetchParams);
+  return convertV1FetchParamsToEntryPoint(fetchParams);
+};
+
 export type { SDKEntryParams, SDKEntryAndFetchParams };
-export { loadRemoteEntryContainer, resolveRemoteEntry, separateFetchParamsFromOtherOptions };
+export {
+  getRemoteEntryPointIdentifier,
+  loadRemoteEntryContainer,
+  resolveRemoteEntry,
+  separateFetchParamsFromOtherOptions,
+};

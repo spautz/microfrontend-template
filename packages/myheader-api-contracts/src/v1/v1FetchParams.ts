@@ -8,7 +8,7 @@ import { ENTRY_POINTS_FOR_V1_SDK, entryPointValidationRegex } from './v1EntryPoi
  * For V1 of this microfrontend: A locale may be provided, but it's not required.
  */
 interface V1FetchParams {
-  locale?: V1ExplicitlyKnownLocale;
+  locale?: V1ExplicitlyKnownLocale | null | undefined;
 }
 
 /**

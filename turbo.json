@@ -58,6 +58,14 @@
     "pipeline-ci": {
       "dependsOn": ["typecheck", "lint:verify", "test:ci", "build"]
     },
+
+    // The SDK's build includes a copy of the microfrontend's assets, as an optional local fallback
+    "@spautz/header-sdk#build": {
+      "dependsOn": ["@spautz/header-microfrontend-app#build"],
+      "inputs": ["$TURBO_DEFAULT$", "../myheader-microfrontend-app/dist/**"],
+      "outputs": ["dist/**"]
+    },
+
     // -----------------------------------------------------------------------
     // Package tasks
 

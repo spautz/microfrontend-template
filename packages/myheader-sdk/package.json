@@ -42,14 +42,15 @@
     },
     "./server": {
       "import": {
-        "types": "./dist/esm/server.d.ts",
-        "default": "./dist/esm/server.js"
+        "types": "./dist/esm/serverIndex.d.ts",
+        "default": "./dist/esm/serverIndex.js"
       },
       "require": {
-        "types": "./dist/cjs/server.d.cts",
-        "default": "./dist/cjs/server.cjs"
+        "types": "./dist/cjs/serverIndex.d.cts",
+        "default": "./dist/cjs/serverIndex.cjs"
       }
     },
+    "./local-fallback/*": "./dist/local-fallback/*",
     "./package.json": "./package.json"
   },
   "main": "./dist/cjs/index.cjs",
@@ -63,9 +64,9 @@
     "____ STANDARD PACKAGE TASKS ________________________________________": "",
     "all": "turbo run pipeline-all",
     "all:ci": "turbo run pipeline-ci --ui=stream",
-    "build": "pnpm run build:clean && pnpm run build:lib && pnpm run build:verify",
+    "build": "pnpm run build:clean && pnpm run build:lib && pnpm run build:local-fallback && pnpm run build:verify",
     "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.turbo ./*.log",
-    "dev": "pnpm run build:lib:watch",
+    "dev": "pnpm run \"/(build:lib:watch|build:local-fallback:watch)/\" ",
     "lint": "biome check --write .",
     "lint:verify": "biome check .",
     "publish:yalc": "yalc publish --sig --push --replace",
@@ -79,6 +80,8 @@
     "build:clean": "rimraf --glob ./dist ./*.tgz",
     "build:lib": "tsdown --config ./tsdown.config.ts",
     "build:lib:watch": "tsdown --config ./tsdown.config.ts --watch",
+    "build:local-fallback": "node --experimental-strip-types  ./scripts/copy-local-fallback-from-microfrontend.ts ../myheader-microfrontend-app/dist/",
+    "build:local-fallback:watch": "node --experimental-strip-types --watch --watch-path=../myheader-microfrontend-app/dist/  ./scripts/copy-local-fallback-from-microfrontend.ts ../myheader-microfrontend-app/dist/",
     "build:verify": "publint --strict && size-limit",
     "build:verifypack": "ls *.tgz | xargs -I {} attw {} --exclude-entrypoints internal-raw-src",
     "size-check": "size-limit --why"
@@ -91,6 +94,7 @@
     "@size-limit/esbuild": "catalog:",
     "@size-limit/esbuild-why": "catalog:",
     "@size-limit/file": "catalog:",
+    "glob": "catalog:",
     "publint": "catalog:",
     "size-limit": "catalog:",
     "source-map-explorer": "catalog:",
