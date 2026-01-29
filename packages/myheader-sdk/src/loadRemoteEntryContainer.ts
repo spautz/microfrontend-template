@@ -1,4 +1,4 @@
-import { REMOTE_MODULE_CONTAINER_FILENAME } from '@spautz/header-api-contracts/v1';
+import { buildUrlString, REMOTE_MODULE_CONTAINER_FILENAME } from '@spautz/header-api-contracts/v1';
 
 /**
  * The module federation container used by the microfrontend-app
@@ -14,7 +14,7 @@ const getShareScope = (): Record<string, unknown> =>
   (globalThis as { __federation_shared__?: Record<string, unknown> }).__federation_shared__ ?? {};
 
 const loadRemoteEntryContainer = async (baseUrl: string | URL): Promise<RemoteEntryContainer> => {
-  const remoteEntryUrl = new URL(REMOTE_ENTRY_FILENAME, baseUrl).toString();
+  const remoteEntryUrl = buildUrlString(REMOTE_ENTRY_FILENAME, baseUrl);
   const container = (await import(
     /* @vite-ignore */ /* webpackIgnore: true */ remoteEntryUrl
   )) as RemoteEntryContainer;

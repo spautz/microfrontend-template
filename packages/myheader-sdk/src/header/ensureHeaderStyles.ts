@@ -1,3 +1,5 @@
+import { buildUrlString } from '@spautz/header-api-contracts/v1';
+
 type EnsureHeaderStylesOptions = {
   baseUrl: string | URL;
   entryPointIdentifier: string;
@@ -92,7 +94,7 @@ const ensureHeaderStyles = async ({
     return;
   }
 
-  const includeUrl = new URL(`asset-include/${entryPointIdentifier}.json`, baseUrl).toString();
+  const includeUrl = buildUrlString(`asset-include/${entryPointIdentifier}.json`, baseUrl);
 
   try {
     const response = await fetch(includeUrl);
@@ -102,7 +104,7 @@ const ensureHeaderStyles = async ({
 
     const payload = (await response.json()) as AssetIncludePayload;
     const cssFiles = Array.isArray(payload.css) ? payload.css : [];
-    const cssUrls = cssFiles.map((file) => new URL(file, baseUrl).toString());
+    const cssUrls = cssFiles.map((file) => buildUrlString(file, baseUrl));
     await Promise.all(cssUrls.map((url) => loadStylesheet(url)));
   } catch {
     // We don't care if a *prefetch* failed. The real test will be in the microfrontend itself,

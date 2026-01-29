@@ -68,7 +68,7 @@
     "____ BUILD & VALIDATION TASKS ______________________________________": "",
     "build:clean": "rimraf --glob ./dist ./*.tgz",
     "build:lib": "tsdown --config ./tsdown.config.ts",
-    "build:lib:watch": "tsdown --config ./tsdown.config.ts --watch",
+    "build:lib:watch": "tsdown --config ./tsdown.config.ts --watch --no-clean",
     "build:verify": "publint --strict && size-limit",
     "build:verifypack": "ls *.tgz | xargs -I {} attw {} --exclude-entrypoints internal-raw-src",
     "size-check": "size-limit --why"
