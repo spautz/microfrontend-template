@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: [ push ]
 
 permissions:
   contents: read
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.x, 24.x, latest]
+        node-version: [ 22.x, 24.x, latest ]
 
     steps:
       - uses: actions/checkout@v6.0.1
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-name: [myheader-api-contracts, myheader-microfrontend-app, myheader-sdk]
+        package-name: [ myheader-api-contracts, myheader-microfrontend-app, myheader-sdk ]
 
     steps:
       - uses: actions/checkout@v6.0.1
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        demo-name: [basic-vite-demo]
+        demo-name: [ basic-nextjs-demo, basic-react-router-demo, basic-tanstack-demo, basic-vite-demo ]
 
     steps:
       - uses: actions/checkout@v6.0.1

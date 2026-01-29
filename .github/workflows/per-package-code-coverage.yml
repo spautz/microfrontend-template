@@ -23,7 +23,7 @@ jobs:
         && github.ref_protected == true
     strategy:
       matrix:
-        package-name: [myheader-api-contracts, myheader-microfrontend-app, myheader-sdk]
+        package-name: [ myheader-api-contracts, myheader-microfrontend-app, myheader-sdk ]
 
     steps:
       - uses: actions/checkout@v6.0.1

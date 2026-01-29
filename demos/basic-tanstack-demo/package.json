@@ -1,14 +1,44 @@
 {
-  "name": "basic-tanstack-demo",
+  "name": "@spautz/microfrontend-template--basic-tanstack-demo",
   "private": true,
+  "description": "Basic UI demo app for the microfrontend SDK, using Tanstack Start",
+  "license": "MIT",
+  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/demos/basic-tanstack-demo#readme",
+  "bugs": "https://github.com/spautz/microfrontend-template/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spautz/microfrontend-template.git",
+    "directory": "demos/basic-tanstack-demo"
+  },
+  "author": {
+    "name": "Steven Pautz",
+    "url": "https://stevenpautz.com"
+  },
+  "source": "./src/routes/__root.tsx",
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run"
+    "____ STANDARD PACKAGE TASKS ________________________________________": "",
+    "all": "turbo run pipeline-all",
+    "all:ci": "turbo run pipeline-ci --ui=stream",
+    "build": "pnpm run build:clean && pnpm run build:main",
+    "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.nitro ./.tanstack ./.turbo ./*.log",
+    "dev": "vite dev --port 3003",
+    "lint": "biome check --write .",
+    "lint:verify": "biome check .",
+    "start": "vite preview --port 3003",
+    "test:clean": "rimraf ./coverage",
+    "test": "pnpm run test:clean       && vitest run --coverage",
+    "test:ci": "pnpm run test:clean    && vitest run --coverage --bail 1",
+    "test:ui": "pnpm run test:clean    && vitest --ui",
+    "test:watch": "pnpm run test:clean && vitest watch --coverage",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit",
+    "____ BUILD & DEPLOY TASKS __________________________________________": "",
+    "build:clean": "rimraf ./.output",
+    "build:main": "vite build",
+    "build:watch": "pnpm run build:clean && vite build --watch"
   },
   "dependencies": {
+    "@spautz/header-sdk": "workspace:^",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-router": "^1.132.0",
@@ -18,23 +48,23 @@
     "@tanstack/router-plugin": "^1.132.0",
     "lucide-react": "^0.561.0",
     "nitro": "npm:nitro-nightly@latest",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tailwindcss": "^4.0.6",
     "vite-tsconfig-paths": "^6.0.2"
   },
   "devDependencies": {
     "@tanstack/devtools-vite": "^0.3.11",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.2.0",
-    "@types/node": "^22.10.2",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^5.0.4",
     "jsdom": "^27.0.0",
     "typescript": "^5.7.2",
-    "vite": "^7.1.7",
-    "vitest": "^3.0.5",
+    "vite": "catalog:",
+    "vitest": "catalog:",
     "web-vitals": "^5.1.0"
   }
 }

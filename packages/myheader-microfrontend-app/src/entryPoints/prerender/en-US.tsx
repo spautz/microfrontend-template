@@ -3,7 +3,7 @@ import { getLinkLabels } from '../commonData/en-US.js';
 
 if (process.env.NODE_ENV !== 'production') {
   // biome-ignore lint/suspicious/noConsole: This is for local dev only
-  console.log('Server entry: en-US');
+  console.log('Prerender entry: en-US');
 }
 
 const v1Header_prerender = v1Header_prerenderWithEntryPointValues.bind(null, {

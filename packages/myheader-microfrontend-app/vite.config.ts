@@ -151,10 +151,12 @@ const collectAssetsForManifestKey = (
       return;
     }
 
-    entry.imports?.forEach(visit);
-    entry.css?.forEach((file) => {
+    for (const importKey of entry.imports ?? []) {
+      visit(importKey);
+    }
+    for (const file of entry.css ?? []) {
       cssFiles.add(file);
-    });
+    }
     if (isJavascriptFile(entry.file)) {
       jsFiles.add(entry.file);
     }

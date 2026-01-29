@@ -22,12 +22,38 @@
       "!yarn.lock",
       // Biome's formatter currently erases comments from yaml files
       "!**/*.yaml",
+      // Ignore generated artifacts (e.g. TanStack route trees)
+      "!**/*.gen.*",
       // Each external-test has its own linting config, following the conventions of its framework
       "!**/external-tests"
     ],
     // 2mb
     "maxSize": 2097152
   },
+  "overrides": [
+    {
+      "includes": [
+        "packages/myheader-microfrontend-app/**",
+        "demos/basic-nextjs-demo/**",
+        "demos/basic-react-router-demo/**",
+        "demos/basic-tanstack-demo/**",
+        "demos/basic-vite-demo/**"
+      ],
+      "linter": {
+        "domains": {
+          "react": "recommended"
+        }
+      }
+    },
+    {
+      "includes": ["demos/basic-nextjs-demo/**"],
+      "linter": {
+        "domains": {
+          "next": "recommended"
+        }
+      }
+    }
+  ],
   "formatter": {
     "formatWithErrors": true,
     "indentStyle": "space",

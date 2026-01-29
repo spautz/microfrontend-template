@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 /*
 const loggingMiddleware = createMiddleware().server(
@@ -52,15 +52,15 @@ export const Route = createFileRoute('/demo/start/server-funcs')({
 
 function Home() {
   const router = useRouter();
-  let todos = Route.useLoaderData();
+  const todos = Route.useLoaderData();
 
   const [todo, setTodo] = useState('');
 
-  const submitTodo = useCallback(async () => {
-    todos = await addTodo({ data: todo });
+  const submitTodo = async () => {
+    await addTodo({ data: todo });
     setTodo('');
     router.invalidate();
-  }, [addTodo, todo]);
+  };
 
   return (
     <div
@@ -73,12 +73,12 @@ function Home() {
       <div className="w-full max-w-2xl p-8 rounded-xl backdrop-blur-md bg-black/50 shadow-xl border-8 border-black/10">
         <h1 className="text-2xl mb-4">Start Server Functions - Todo Example</h1>
         <ul className="mb-4 space-y-2">
-          {todos?.map((t) => (
+          {todos?.map((todo: { id: string; name: string }) => (
             <li
-              key={t.id}
+              key={todo.id}
               className="bg-white/10 border border-white/20 rounded-lg p-3 backdrop-blur-sm shadow-md"
             >
-              <span className="text-lg text-white">{t.name}</span>
+              <span className="text-lg text-white">{todo.name}</span>
             </li>
           ))}
         </ul>
@@ -96,6 +96,7 @@ function Home() {
             className="w-full px-4 py-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           />
           <button
+            type="button"
             disabled={todo.trim().length === 0}
             onClick={submitTodo}
             className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-colors"

@@ -29,6 +29,7 @@
 
 .pnp
 .pnp.js
+.pnp.*
 .pnpm-store/
 node_modules/
 
@@ -49,14 +50,20 @@ playwright-report/
 
 *.log
 *.tsbuildinfo
+demos/basic-tanstack-demo/src/routeTree.gen.ts
 
 .astro/
 .cache/
 .cache-loader/
 .docusaurus/
 .next/
+.nitro/
+.output/
 .react-router/
 .turbo/
+.tanstack/
+.vinxi/
+.wrangler/
 _fresh/
 build/
 dist/

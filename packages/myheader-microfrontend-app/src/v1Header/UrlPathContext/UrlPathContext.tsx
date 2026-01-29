@@ -28,12 +28,13 @@ const UrlPathProvider = (props: UrlPathProviderProps) => {
   const [urlPath, setUrlPath] = useState<string>(initialUrlPath);
 
   // Allow our setState to be called from outside, via setUrlPath
+  // (and clear it on unmount)
   useEffect(() => {
     internal_setStateForUrlPath = setUrlPath;
     return () => {
       internal_setStateForUrlPath = null;
     };
-  }, [setUrlPath]);
+  }, []);
 
   return <UrlPathContext.Provider value={urlPath}>{children}</UrlPathContext.Provider>;
 };

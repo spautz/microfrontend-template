@@ -1,30 +1,60 @@
 {
-  "name": "basic-react-router-demo",
+  "name": "@spautz/microfrontend-template--basic-react-router-demo",
   "private": true,
+  "description": "Basic UI demo app for the microfrontend SDK, using React-Router",
+  "license": "MIT",
+  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/demos/basic-react-router-demo#readme",
+  "bugs": "https://github.com/spautz/microfrontend-template/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spautz/microfrontend-template.git",
+    "directory": "demos/basic-react-router-demo"
+  },
+  "author": {
+    "name": "Steven Pautz",
+    "url": "https://stevenpautz.com"
+  },
+  "source": "./src/root.tsx",
   "type": "module",
   "scripts": {
-    "build": "react-router build",
+    "____ STANDARD PACKAGE TASKS ________________________________________": "",
+    "all": "turbo run pipeline-all",
+    "all:ci": "turbo run pipeline-ci --ui=stream",
+    "build": "pnpm run build:clean && pnpm run build:main",
+    "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.react-router ./.turbo ./*.log",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "lint": "biome check --write .",
+    "lint:verify": "biome check .",
+    "start": "turbo run build && react-router-serve ./build/server/index.js",
+    "test:clean": "rimraf ./coverage",
+    "test": "pnpm run test:clean       && vitest run --coverage",
+    "test:ci": "pnpm run test:clean    && vitest run --coverage --bail 1",
+    "test:ui": "pnpm run test:clean    && vitest --ui",
+    "test:watch": "pnpm run test:clean && vitest watch --coverage",
+    "typecheck": "pnpm run build:typegen && tsc -p ./tsconfig.json --noEmit",
+    "____ BUILD & DEPLOY TASKS __________________________________________": "",
+    "build:clean": "rimraf ./build",
+    "build:main": "react-router build",
+    "build:typegen": "react-router typegen"
   },
   "dependencies": {
     "@react-router/node": "7.12.0",
     "@react-router/serve": "7.12.0",
+    "@spautz/header-sdk": "workspace:^",
     "isbot": "^5.1.31",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-router": "7.12.0"
   },
   "devDependencies": {
     "@react-router/dev": "7.12.0",
     "@tailwindcss/vite": "^4.1.13",
-    "@types/node": "^22",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.7",
+    "typescript": "catalog:",
+    "vite": "catalog:",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

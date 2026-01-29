@@ -1,26 +1,54 @@
 {
-  "name": "basic-nextjs-demo",
-  "version": "0.1.0",
+  "name": "@spautz/microfrontend-template--basic-nextjs-demo",
   "private": true,
+  "description": "Basic UI demo app for the microfrontend SDK, using Next.js",
+  "license": "MIT",
+  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/demos/basic-nextjs-demo#readme",
+  "bugs": "https://github.com/spautz/microfrontend-template/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spautz/microfrontend-template.git",
+    "directory": "demos/basic-nextjs-demo"
+  },
+  "author": {
+    "name": "Steven Pautz",
+    "url": "https://stevenpautz.com"
+  },
+  "source": "./src/app/layout.tsx",
+  "type": "module",
   "scripts": {
+    "____ STANDARD PACKAGE TASKS ________________________________________": "",
+    "all": "turbo run pipeline-all",
+    "all:ci": "turbo run pipeline-ci --ui=stream",
+    "build": "pnpm run build:clean && pnpm run build:main",
+    "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.next ./.turbo ./*.log",
     "dev": "next dev",
-    "build": "next build",
+    "lint": "biome check --write .",
+    "lint:verify": "biome check .",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "test:clean": "rimraf ./coverage",
+    "test": "pnpm run test:clean       && vitest run --coverage",
+    "test:ci": "pnpm run test:clean    && vitest run --coverage --bail 1",
+    "test:ui": "pnpm run test:clean    && vitest --ui",
+    "test:watch": "pnpm run test:clean && vitest watch --coverage",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit",
+    "____ BUILD & DEPLOY TASKS __________________________________________": "",
+    "build:clean": "rimraf ./dist",
+    "build:main": "next build"
   },
   "dependencies": {
+    "@spautz/header-sdk": "workspace:^",
     "next": "16.1.4",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "4.1.18",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "1.0.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "tailwindcss": "4.1.18",
+    "typescript": "catalog:"
   }
 }

@@ -80,7 +80,7 @@
     // Individual/standalone package tasks
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "build/**", "dist/**"],
+      "outputs": [".next/**", ".output/**", "!.next/cache/**", "build/**", "dist/**"],
       "outputLogs": "new-only"
     },
     "build:watch": {
