@@ -3,3 +3,8 @@
 
 export * from './header/mountHeader.ts';
 export * from './header/rehydrateHeader.ts';
+export {
+  createRemoteEntryLoader,
+  type RemoteEntryImporter,
+  type RemoteEntryLoader,
+} from './loadRemoteEntryContainer.ts';

@@ -41,14 +41,10 @@
       }
     },
     "./server": {
-      "import": {
-        "types": "./dist/esm/serverIndex.d.ts",
-        "default": "./dist/esm/serverIndex.js"
-      },
-      "require": {
-        "types": "./dist/cjs/serverIndex.d.cts",
-        "default": "./dist/cjs/serverIndex.cjs"
-      }
+      "types": "./dist/esm/serverIndex.d.ts",
+      "browser": "./dist/esm/serverIndex.browser.js",
+      "import": "./dist/esm/serverIndex.js",
+      "require": "./dist/cjs/serverIndex.cjs"
     },
     "./local-fallback/*": "./dist/local-fallback/*",
     "./package.json": "./package.json"

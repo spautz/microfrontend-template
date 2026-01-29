@@ -4,7 +4,7 @@ import type {
 } from '@spautz/header-api-contracts/v1';
 
 import {
-  type InitializationAndFetchParams,
+  type ClientInitializationAndFetchParams,
   resolveRemoteEntry,
   separateFetchParamsFromOtherOptions,
 } from '../resolveRemoteEntry.ts';
@@ -13,7 +13,7 @@ import { convertCaughtValueToError } from '../utils.ts';
 // This should be `baseUrl` + `fetchParams` + the options for v1Header_rehydrate()
 // The keys are duplicated here (instead of inherited from those places) so that we'll get
 // an error if something changes unexpectedly.
-type AllRehydrateHeaderOptions = InitializationAndFetchParams & V1Header_RehydrateOptions;
+type AllRehydrateHeaderOptions = ClientInitializationAndFetchParams & V1Header_RehydrateOptions;
 
 const rehydrateHeader = async (
   options: AllRehydrateHeaderOptions,

@@ -2,8 +2,8 @@ import { readFile } from 'node:fs/promises';
 import * as process from 'node:process';
 import {
   getPrerenderedHeader,
-  getRemoteEntryPointIdentifier,
   type OptionsForGetPrerenderedHeader,
+  resolveLocalFallbackPrerenderUrl,
 } from '@spautz/header-sdk/server';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, type Plugin, type UserConfigFnObject } from 'vite';
@@ -77,11 +77,9 @@ function prerenderHeaderVitePlugin(pluginOptions: {
         }
 
         this.warn('Falling back to local copy from SDK Package.');
-        const entryPoint = getRemoteEntryPointIdentifier(optionsForHeaderPrerender);
-        const localFallbackPrerender = import.meta.resolve(
-          `@spautz/header-sdk/local-fallback/prerenders/${entryPoint}.html`,
-        );
-        headerHtml = await readFile(new URL(localFallbackPrerender), 'utf8');
+        const localFallbackPrerenderUrl =
+          resolveLocalFallbackPrerenderUrl(optionsForHeaderPrerender);
+        headerHtml = await readFile(localFallbackPrerenderUrl, 'utf8');
       }
 
       return html.replace(headerMarkerInHtml, headerHtml);

@@ -1,8 +1,12 @@
-import { mountHeader } from '@spautz/header-sdk';
+import { createRemoteEntryLoader, mountHeader } from '@spautz/header-sdk';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './App.js';
+
+const loadRemoteEntry = createRemoteEntryLoader(
+  (remoteEntryUrl) => import(/* @vite-ignore */ /* webpackIgnore: true */ remoteEntryUrl),
+);
 
 mountHeader({
   // biome-ignore lint/suspicious/noConsole: Local dev doesn't need real reporting: the console is enough
@@ -11,6 +15,7 @@ mountHeader({
   onUncaughtRuntimeError: console.error,
   baseUrl: new URL('/proxy-to-mfe/', window.location.origin),
   locale: 'en-US',
+  loadRemoteEntry,
   // #header is created in index.html
   rootElement: document.getElementById('header') as HTMLElement,
   initialUrlPath: window.location.pathname,

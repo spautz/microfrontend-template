@@ -3,3 +3,4 @@
 
 export * from './header/getPrerenderedHeader.js';
 export { getRemoteEntryPointIdentifier } from './resolveRemoteEntry.js';
+export { resolveLocalFallbackPrerenderUrl } from './server/resolveLocalFallbackPrerenderUrl.js';

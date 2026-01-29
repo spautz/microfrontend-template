@@ -8,16 +8,24 @@ type RemoteEntryContainer = {
   init?: (shareScope: Record<string, unknown>) => void | Promise<void>;
 };
 
+type RemoteEntryLoader = (remoteEntryUrl: string) => Promise<RemoteEntryContainer>;
+type RemoteEntryImporter = (remoteEntryUrl: string) => Promise<unknown>;
+
 const REMOTE_ENTRY_FILENAME = `assets/${REMOTE_MODULE_CONTAINER_FILENAME}`;
 
 const getShareScope = (): Record<string, unknown> =>
   (globalThis as { __federation_shared__?: Record<string, unknown> }).__federation_shared__ ?? {};
 
-const loadRemoteEntryContainer = async (baseUrl: string | URL): Promise<RemoteEntryContainer> => {
+const createRemoteEntryLoader = (importer: RemoteEntryImporter): RemoteEntryLoader => {
+  return async (remoteEntryUrl) => (await importer(remoteEntryUrl)) as RemoteEntryContainer;
+};
+
+const loadRemoteEntryContainer = async (
+  baseUrl: string | URL,
+  loadRemoteEntry: RemoteEntryLoader,
+): Promise<RemoteEntryContainer> => {
   const remoteEntryUrl = buildUrlString(REMOTE_ENTRY_FILENAME, baseUrl);
-  const container = (await import(
-    /* @vite-ignore */ /* webpackIgnore: true */ remoteEntryUrl
-  )) as RemoteEntryContainer;
+  const container = await loadRemoteEntry(remoteEntryUrl);
 
   if (typeof container.init === 'function') {
     await container.init(getShareScope());
@@ -26,5 +34,5 @@ const loadRemoteEntryContainer = async (baseUrl: string | URL): Promise<RemoteEn
   return container;
 };
 
-export type { RemoteEntryContainer };
-export { loadRemoteEntryContainer };
+export type { RemoteEntryContainer, RemoteEntryImporter, RemoteEntryLoader };
+export { createRemoteEntryLoader, loadRemoteEntryContainer };

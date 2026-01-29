@@ -18,6 +18,7 @@ describe('rehydrateHeader', () => {
 
   it('resolves the remote entry using baseUrl and locale', async () => {
     const baseUrl = new URL('https://example.com/');
+    const loadRemoteEntry = vi.fn();
     const rootElement = document.createElement('div');
     const v1Header_rehydrate = vi
       .fn()
@@ -31,6 +32,7 @@ describe('rehydrateHeader', () => {
 
     await rehydrateHeader({
       baseUrl,
+      loadRemoteEntry,
       onInitializationError: throwAndFailTest,
       onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-US',
@@ -42,6 +44,7 @@ describe('rehydrateHeader', () => {
       expect.objectContaining({
         baseUrl,
         locale: 'en-US',
+        loadRemoteEntry,
         onInitializationError: throwAndFailTest,
       }),
     );
@@ -55,6 +58,7 @@ describe('rehydrateHeader', () => {
 
   it('passes through render options and returns the update callback', async () => {
     const baseUrl = new URL('https://example.com/');
+    const loadRemoteEntry = vi.fn();
     const rootElement = document.createElement('div');
     const onNavLinkClick = vi.fn();
     const setNewOptions = vi.fn();
@@ -70,6 +74,7 @@ describe('rehydrateHeader', () => {
 
     const result = await rehydrateHeader({
       baseUrl,
+      loadRemoteEntry,
       onInitializationError: throwAndFailTest,
       onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',
