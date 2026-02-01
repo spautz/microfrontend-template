@@ -3,7 +3,7 @@ import {
   convertV1FetchParamsToEntryPoint,
   type V1FetchParams,
   type V1Header_PrerenderOptions,
-} from '@spautz/header-api-contracts/v1';
+} from '@spautz/myheader-api-contracts/v1';
 
 const buildPrerenderedHeaderUrl = (
   baseUrl: string | URL,

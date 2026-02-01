@@ -1,7 +1,7 @@
 import type {
   V1Header_PrerenderOptions,
   V1Header_PrerenderReturn,
-} from '@spautz/header-api-contracts/v1';
+} from '@spautz/myheader-api-contracts/v1';
 
 import {
   type InitializationAndFetchParams,

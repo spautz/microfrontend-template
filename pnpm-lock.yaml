@@ -145,7 +145,7 @@ importers:
 
   demos/basic-nextjs-demo:
     dependencies:
-      '@spautz/header-sdk':
+      '@spautz/myheader-sdk':
         specifier: workspace:^
         version: link:../../packages/myheader-sdk
       next:
@@ -188,7 +188,7 @@ importers:
       '@react-router/serve':
         specifier: 7.13.0
         version: 7.13.0(react-router@7.13.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(typescript@5.9.3)
-      '@spautz/header-sdk':
+      '@spautz/myheader-sdk':
         specifier: workspace:^
         version: link:../../packages/myheader-sdk
       isbot:
@@ -234,7 +234,7 @@ importers:
 
   demos/basic-tanstack-demo:
     dependencies:
-      '@spautz/header-sdk':
+      '@spautz/myheader-sdk':
         specifier: workspace:^
         version: link:../../packages/myheader-sdk
       '@tailwindcss/vite':
@@ -316,7 +316,7 @@ importers:
 
   demos/basic-vite-demo:
     dependencies:
-      '@spautz/header-sdk':
+      '@spautz/myheader-sdk':
         specifier: workspace:^
         version: link:../../packages/myheader-sdk
     devDependencies:
@@ -378,7 +378,7 @@ importers:
 
   packages/myheader-microfrontend-app:
     dependencies:
-      '@spautz/header-api-contracts':
+      '@spautz/myheader-api-contracts':
         specifier: workspace:^
         version: link:../myheader-api-contracts
       react:
@@ -412,7 +412,7 @@ importers:
 
   packages/myheader-sdk:
     dependencies:
-      '@spautz/header-api-contracts':
+      '@spautz/myheader-api-contracts':
         specifier: workspace:^
         version: link:../myheader-api-contracts
     devDependencies:

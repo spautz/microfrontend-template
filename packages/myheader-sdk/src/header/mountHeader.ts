@@ -1,7 +1,10 @@
-import type { V1Header_MountOptions, V1Header_MountReturn } from '@spautz/header-api-contracts/v1';
+import type {
+  V1Header_MountOptions,
+  V1Header_MountReturn,
+} from '@spautz/myheader-api-contracts/v1';
 
 import {
-  type ClientInitializationAndFetchParams,
+  type InitializationAndFetchParams,
   resolveRemoteEntry,
   separateFetchParamsFromOtherOptions,
 } from '../resolveRemoteEntry.ts';
@@ -10,7 +13,7 @@ import { convertCaughtValueToError } from '../utils.ts';
 // This should be `baseUrl` + `fetchParams` + the options for v1Header_mount()
 // The keys are duplicated here (instead of inherited from those places) so that we'll get
 // an error if something changes unexpectedly.
-type AllMountHeaderOptions = ClientInitializationAndFetchParams & V1Header_MountOptions;
+type AllMountHeaderOptions = InitializationAndFetchParams & V1Header_MountOptions;
 
 const mountHeader = async (
   options: AllMountHeaderOptions,

@@ -18,7 +18,6 @@ describe('mountHeader', () => {
 
   it('resolves the remote entry using baseUrl and locale', async () => {
     const baseUrl = new URL('https://example.com/');
-    const loadRemoteEntry = vi.fn();
     const rootElement = document.createElement('div');
     const v1Header_mount = vi.fn().mockReturnValue({ setNewOptions: vi.fn(), unmount: vi.fn() });
 
@@ -30,7 +29,6 @@ describe('mountHeader', () => {
 
     await mountHeader({
       baseUrl,
-      loadRemoteEntry,
       onInitializationError: throwAndFailTest,
       onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-US',
@@ -42,7 +40,6 @@ describe('mountHeader', () => {
       expect.objectContaining({
         baseUrl,
         locale: 'en-US',
-        loadRemoteEntry,
         onInitializationError: throwAndFailTest,
       }),
     );
@@ -56,7 +53,6 @@ describe('mountHeader', () => {
 
   it('passes through render options and returns the update callback', async () => {
     const baseUrl = new URL('https://example.com/');
-    const loadRemoteEntry = vi.fn();
     const rootElement = document.createElement('div');
     const onNavLinkClick = vi.fn();
     const setNewOptions = vi.fn();
@@ -72,7 +68,6 @@ describe('mountHeader', () => {
 
     const result = await mountHeader({
       baseUrl,
-      loadRemoteEntry,
       onInitializationError: throwAndFailTest,
       onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',

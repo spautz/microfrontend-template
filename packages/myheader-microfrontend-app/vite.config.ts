@@ -5,7 +5,7 @@ import federation from '@originjs/vite-plugin-federation';
 import {
   ENTRY_POINTS_FOR_V1_MICROFRONTEND,
   REMOTE_MODULE_CONTAINER_FILENAME,
-} from '@spautz/header-api-contracts/v1';
+} from '@spautz/myheader-api-contracts/v1';
 import react from '@vitejs/plugin-react';
 import { type Connect, defineConfig } from 'vite';
 

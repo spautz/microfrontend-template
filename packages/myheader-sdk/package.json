@@ -1,5 +1,5 @@
 {
-  "name": "@spautz/header-sdk",
+  "name": "@spautz/myheader-sdk",
   "version": "0.0.1",
   "description": "SDK package for fetching and using a header microfrontend, in my opinionated microfrontend-template",
   "keywords": [],
@@ -41,10 +41,14 @@
       }
     },
     "./server": {
-      "types": "./dist/esm/serverIndex.d.ts",
-      "browser": "./dist/esm/serverIndex.browser.js",
-      "import": "./dist/esm/serverIndex.js",
-      "require": "./dist/cjs/serverIndex.cjs"
+      "import": {
+        "types": "./dist/esm/serverIndex.d.ts",
+        "default": "./dist/esm/serverIndex.js"
+      },
+      "require": {
+        "types": "./dist/cjs/serverIndex.d.cts",
+        "default": "./dist/cjs/serverIndex.cjs"
+      }
     },
     "./local-fallback/*": "./dist/local-fallback/*",
     "./package.json": "./package.json"
@@ -83,7 +87,7 @@
     "size-check": "size-limit --why"
   },
   "dependencies": {
-    "@spautz/header-api-contracts": "workspace:^"
+    "@spautz/myheader-api-contracts": "workspace:^"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",

@@ -15,7 +15,6 @@ describe('resolveRemoteEntry', () => {
 
   it('loads the entry point for the locale', async () => {
     const baseUrl = new URL('https://example.com/');
-    const loadRemoteEntry = vi.fn();
     const v1Header_mount = vi.fn();
     const v1Header_rehydrate = vi.fn();
     const v1Header_prerender = vi.fn();
@@ -29,13 +28,12 @@ describe('resolveRemoteEntry', () => {
 
     const result = await resolveRemoteEntry({
       baseUrl,
-      loadRemoteEntry,
       onInitializationError: throwAndFailTest,
       onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-GB',
     });
 
-    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl, loadRemoteEntry);
+    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl);
     expect(container.get).toHaveBeenCalledWith('./en-GB');
     expect(factory).toHaveBeenCalled();
     expect(result).toBe(entryModule);
@@ -43,7 +41,6 @@ describe('resolveRemoteEntry', () => {
 
   it('does not halt on prefetch errors', async () => {
     const baseUrl = new URL('https://example.com/');
-    const loadRemoteEntry = vi.fn();
     const v1Header_mount = vi.fn();
     const v1Header_rehydrate = vi.fn();
     const v1Header_prerender = vi.fn();
@@ -64,14 +61,13 @@ describe('resolveRemoteEntry', () => {
 
     const result = await resolveRemoteEntry({
       baseUrl,
-      loadRemoteEntry,
       onInitializationError: throwAndFailTest,
       onUncaughtRuntimeError: throwAndFailTest,
       locale: 'en-US',
     });
 
     expect(fetchMock).toHaveBeenCalledWith('https://example.com/asset-include/en-US.json');
-    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl, loadRemoteEntry);
+    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl);
     expect(container.get).toHaveBeenCalledWith('./en-US');
     expect(factory).toHaveBeenCalled();
     expect(result).toBe(entryModule);

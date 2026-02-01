@@ -1,5 +1,5 @@
 {
-  "name": "@spautz/header-microfrontend-app",
+  "name": "@spautz/myheader-microfrontend-app",
   "private": true,
   "description": "Microfrontend for a header microfrontend, in my opinionated microfrontend-template",
   "license": "MIT",
@@ -42,7 +42,7 @@
     "serve:prod": "vite preview --port 3000"
   },
   "dependencies": {
-    "@spautz/header-api-contracts": "workspace:^",
+    "@spautz/myheader-api-contracts": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

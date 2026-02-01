@@ -7,9 +7,9 @@ import {
   type V1Header_PrerenderReturn,
   type V1Header_RehydrateOptions,
   type V1Header_RehydrateReturn,
-} from '@spautz/header-api-contracts/v1';
+} from '@spautz/myheader-api-contracts/v1';
 import { ensureHeaderStyles } from './header/ensureHeaderStyles.ts';
-import { loadRemoteEntryContainer, type RemoteEntryLoader } from './loadRemoteEntryContainer.ts';
+import { loadRemoteEntryContainer } from './loadRemoteEntryContainer.ts';
 import { convertCaughtValueToError } from './utils.ts';
 
 /**
@@ -22,13 +22,9 @@ type InitializationParams = {
   onInitializationError: (message: string, error?: Error) => void;
   onUncaughtRuntimeError: (error?: Error) => void;
   sharedDependencies?: Record<string, unknown>;
-  loadRemoteEntry?: RemoteEntryLoader;
 };
 
 type InitializationAndFetchParams = InitializationParams & V1FetchParams;
-type ClientInitializationAndFetchParams = Omit<InitializationAndFetchParams, 'loadRemoteEntry'> & {
-  loadRemoteEntry: RemoteEntryLoader;
-};
 
 type ExportsFromRemoteEntryModule = {
   v1Header_mount: (options: V1Header_MountOptions) => V1Header_MountReturn;
@@ -36,9 +32,7 @@ type ExportsFromRemoteEntryModule = {
   v1Header_prerender: (options: V1Header_PrerenderOptions) => V1Header_PrerenderReturn;
 };
 
-const separateFetchParamsFromOtherOptions = <
-  T extends InitializationAndFetchParams | ClientInitializationAndFetchParams,
->(
+const separateFetchParamsFromOtherOptions = <T extends InitializationAndFetchParams>(
   allOptions: T,
 ): [
   InitializationParams,
@@ -51,7 +45,6 @@ const separateFetchParamsFromOtherOptions = <
     onUncaughtRuntimeError,
     locale = null,
     sharedDependencies = {},
-    loadRemoteEntry: _loadRemoteEntry,
     ...otherOptions
   } = allOptions;
   const initializationParams = {
@@ -66,7 +59,7 @@ const separateFetchParamsFromOtherOptions = <
 };
 
 const resolveRemoteEntry = async (
-  allOptions: ClientInitializationAndFetchParams,
+  allOptions: InitializationAndFetchParams,
 ): Promise<ExportsFromRemoteEntryModule> => {
   const [initializationParams, fetchParams] = separateFetchParamsFromOtherOptions(allOptions);
 
@@ -75,10 +68,6 @@ const resolveRemoteEntry = async (
     onInitializationError,
     sharedDependencies: _sharedDependencies,
   } = initializationParams;
-  const { loadRemoteEntry } = allOptions;
-  if (!loadRemoteEntry) {
-    throw new Error('loadRemoteEntry is required to resolve the header microfrontend.');
-  }
 
   try {
     const entryPointIdentifier = convertV1FetchParamsToEntryPoint(fetchParams);
@@ -87,7 +76,7 @@ const resolveRemoteEntry = async (
     });
     const entryPoint = `./${entryPointIdentifier}`;
 
-    const container = await loadRemoteEntryContainer(baseUrl, loadRemoteEntry);
+    const container = await loadRemoteEntryContainer(baseUrl);
     const factory = await container.get(entryPoint);
 
     const module = await factory();
@@ -106,11 +95,7 @@ const getRemoteEntryPointIdentifier = (options: V1FetchParams) => {
   return convertV1FetchParamsToEntryPoint(fetchParams);
 };
 
-export type {
-  ClientInitializationAndFetchParams,
-  InitializationParams,
-  InitializationAndFetchParams,
-};
+export type { InitializationParams, InitializationAndFetchParams };
 export {
   getRemoteEntryPointIdentifier,
   loadRemoteEntryContainer,

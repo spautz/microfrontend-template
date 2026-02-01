@@ -1,5 +1,5 @@
 {
-  "name": "@spautz/header-api-contracts",
+  "name": "@spautz/myheader-api-contracts",
   "version": "0.0.1",
   "description": "Typings and API contracts for a header microfrontend, in my opinionated microfrontend-template",
   "keywords": [],

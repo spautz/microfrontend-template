@@ -1,4 +1,7 @@
-import { buildUrlString, REMOTE_MODULE_CONTAINER_FILENAME } from '@spautz/header-api-contracts/v1';
+import {
+  buildUrlString,
+  REMOTE_MODULE_CONTAINER_FILENAME,
+} from '@spautz/myheader-api-contracts/v1';
 
 /**
  * The module federation container used by the microfrontend-app
@@ -8,24 +11,16 @@ type RemoteEntryContainer = {
   init?: (shareScope: Record<string, unknown>) => void | Promise<void>;
 };
 
-type RemoteEntryLoader = (remoteEntryUrl: string) => Promise<RemoteEntryContainer>;
-type RemoteEntryImporter = (remoteEntryUrl: string) => Promise<unknown>;
-
 const REMOTE_ENTRY_FILENAME = `assets/${REMOTE_MODULE_CONTAINER_FILENAME}`;
 
 const getShareScope = (): Record<string, unknown> =>
   (globalThis as { __federation_shared__?: Record<string, unknown> }).__federation_shared__ ?? {};
 
-const createRemoteEntryLoader = (importer: RemoteEntryImporter): RemoteEntryLoader => {
-  return async (remoteEntryUrl) => (await importer(remoteEntryUrl)) as RemoteEntryContainer;
-};
-
-const loadRemoteEntryContainer = async (
-  baseUrl: string | URL,
-  loadRemoteEntry: RemoteEntryLoader,
-): Promise<RemoteEntryContainer> => {
+const loadRemoteEntryContainer = async (baseUrl: string | URL): Promise<RemoteEntryContainer> => {
   const remoteEntryUrl = buildUrlString(REMOTE_ENTRY_FILENAME, baseUrl);
-  const container = await loadRemoteEntry(remoteEntryUrl);
+  const container = (await import(
+    /* @vite-ignore */ /* webpackIgnore: true */ remoteEntryUrl
+  )) as RemoteEntryContainer;
 
   if (typeof container.init === 'function') {
     await container.init(getShareScope());
@@ -34,5 +29,5 @@ const loadRemoteEntryContainer = async (
   return container;
 };
 
-export type { RemoteEntryContainer, RemoteEntryImporter, RemoteEntryLoader };
-export { createRemoteEntryLoader, loadRemoteEntryContainer };
+export type { RemoteEntryContainer };
+export { loadRemoteEntryContainer };

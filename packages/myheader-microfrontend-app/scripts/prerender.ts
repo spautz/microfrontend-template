@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { ENTRY_POINTS_FOR_V1_MICROFRONTEND } from '@spautz/header-api-contracts/v1';
+import { ENTRY_POINTS_FOR_V1_MICROFRONTEND } from '@spautz/myheader-api-contracts/v1';
 import { createServer } from 'vite';
 
 type V1HeaderPrerender = (options: { initialUrlPath: string }) => Promise<string> | string;

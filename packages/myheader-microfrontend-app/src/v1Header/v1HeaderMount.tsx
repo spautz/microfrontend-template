@@ -1,4 +1,4 @@
-import type { V1Header_MountOptions, V1Header_MountReturn } from '@spautz/header-api-contracts/v1';
+import type { V1Header_MountOptions, V1Header_MountReturn } from '@spautz/myheader-api-contracts/v1';
 import ReactDOM from 'react-dom/client';
 import { HeaderApp, type HeaderAppProps } from './HeaderApp.js';
 import { setUrlPath } from './UrlPathContext/UrlPathContext.js';

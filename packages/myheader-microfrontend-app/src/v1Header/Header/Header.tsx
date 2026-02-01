@@ -1,4 +1,4 @@
-import { buildUrlString } from '@spautz/header-api-contracts/v1';
+import { buildUrlString } from '@spautz/myheader-api-contracts/v1';
 import classes from './Header.module.css';
 
 interface HeaderProps {
