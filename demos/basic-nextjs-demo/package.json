@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@spautz/header-sdk": "workspace:^",
-    "next": "16.1.4",
+    "next": "16.1.5",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

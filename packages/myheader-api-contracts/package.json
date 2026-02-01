@@ -74,7 +74,7 @@
     "size-check": "size-limit --why"
   },
   "dependencies": {
-    "zod": "^4.3.5"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "catalog:",
