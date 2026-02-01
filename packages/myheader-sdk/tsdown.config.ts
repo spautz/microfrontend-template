@@ -8,6 +8,10 @@ const config = defineConfig(
   baseConfigValues.map((baseConfig) => ({
     ...baseConfig,
     entry,
+    minify: false,
+    outputOptions: {
+      legalComments: 'inline',
+    } as const,
   })),
 );
 

@@ -18,9 +18,32 @@ import { convertCaughtValueToError } from './utils.ts';
  * (in the same options object as FetchParams and any function-specific options)
  */
 type InitializationParams = {
+  /**
+   * Location where the microfrontend has been deployed. Assets will be resolved relative to this.
+   */
   baseUrl: string | URL;
-  onInitializationError: (message: string, error?: Error) => void;
-  onUncaughtRuntimeError: (error?: Error) => void;
+  /**
+   * If we cannot reach the microfrontend, details will be sent here.
+   */
+  onInitializationError: (error: Error, message: string) => void;
+  /**
+   * The microfrontend *should* never throw any error, but if it does then it will be sent here.
+   */
+  onUncaughtRuntimeError: (error: Error) => void;
+  /**
+   * Some build systems don't allow dependencies to do dynamic imports: if your app's build
+   * raises an error like "Module not found: Can't resolve <dynamic>", then the `import()`
+   * within the library isn't being treated properly.
+   *
+   * You can fix that by supplying your own locally-scoped and build-system-excluded
+   * implementation. It will usually look like:
+   *  `doDynamicImport: (url) => import(url),`
+   * and it may have inline comments like `turbopackIgnore: true`
+   */
+  doDynamicImport?: ((url: string) => ReturnType<typeof loadRemoteEntryContainer>) | undefined;
+  /**
+   * Modules present in the host app which the microfrontend may make use of.
+   */
   sharedDependencies?: Record<string, unknown>;
 };
 
@@ -43,14 +66,17 @@ const separateFetchParamsFromOtherOptions = <T extends InitializationAndFetchPar
     baseUrl,
     onInitializationError,
     onUncaughtRuntimeError,
+    doDynamicImport,
     locale = null,
     sharedDependencies = {},
     ...otherOptions
   } = allOptions;
+
   const initializationParams = {
     baseUrl,
     onInitializationError,
     onUncaughtRuntimeError,
+    doDynamicImport,
     sharedDependencies,
   };
   const fetchParams = { locale };
@@ -63,27 +89,22 @@ const resolveRemoteEntry = async (
 ): Promise<ExportsFromRemoteEntryModule> => {
   const [initializationParams, fetchParams] = separateFetchParamsFromOtherOptions(allOptions);
 
-  const {
-    baseUrl,
-    onInitializationError,
-    sharedDependencies: _sharedDependencies,
-  } = initializationParams;
+  const { baseUrl, onInitializationError } = initializationParams;
 
   try {
     const entryPointIdentifier = convertV1FetchParamsToEntryPoint(fetchParams);
     await ensureHeaderStyles({ baseUrl, entryPointIdentifier }).catch((error) => {
-      onInitializationError('Could not preload header styles', error);
+      onInitializationError(convertCaughtValueToError(error), 'Could not preload header styles');
     });
     const entryPoint = `./${entryPointIdentifier}`;
 
-    const container = await loadRemoteEntryContainer(baseUrl);
+    const container = await loadRemoteEntryContainer(initializationParams);
     const factory = await container.get(entryPoint);
 
     const module = await factory();
     return module as ExportsFromRemoteEntryModule;
-  } catch (err: unknown) {
-    const error = convertCaughtValueToError(err);
-    onInitializationError('Could not resolve remote entry', error);
+  } catch (error: unknown) {
+    onInitializationError(convertCaughtValueToError(error), 'Could not resolve remote entry');
     throw error;
   }
 };

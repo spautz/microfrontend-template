@@ -46,7 +46,7 @@ describe('getPrerenderedHeader', () => {
     );
   });
 
-  it('returns an error and reports it when the request fails', async () => {
+  it('reports an error and reports null when the request fails', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
@@ -64,7 +64,7 @@ describe('getPrerenderedHeader', () => {
       initialUrlPath: null,
     });
 
-    expect(result).toBeInstanceOf(Error);
+    expect(result).toBe(null);
     expect(onInitializationError).toHaveBeenCalled();
   });
 });

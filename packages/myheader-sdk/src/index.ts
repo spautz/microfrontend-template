@@ -3,3 +3,9 @@
 
 export * from './header/mountHeader.ts';
 export * from './header/rehydrateHeader.ts';
+
+import type { V1FetchParams } from '@spautz/myheader-api-contracts/v1';
+
+type HeaderLocale = V1FetchParams['locale'];
+
+export type { HeaderLocale };

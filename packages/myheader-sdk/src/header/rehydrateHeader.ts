@@ -17,7 +17,7 @@ type AllRehydrateHeaderOptions = InitializationAndFetchParams & V1Header_Rehydra
 
 const rehydrateHeader = async (
   options: AllRehydrateHeaderOptions,
-): Promise<V1Header_RehydrateReturn | Error> => {
+): Promise<V1Header_RehydrateReturn | null> => {
   const browserEntry = await resolveRemoteEntry(options);
 
   const [initializationParams, , rehydrateOptions] = separateFetchParamsFromOtherOptions(options);
@@ -30,7 +30,7 @@ const rehydrateHeader = async (
   } catch (err: unknown) {
     error = convertCaughtValueToError(err);
     onUncaughtRuntimeError(error);
-    return error;
+    return null;
   }
 };
 

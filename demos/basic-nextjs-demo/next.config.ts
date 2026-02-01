@@ -7,35 +7,42 @@ const HEADER_SOURCE_PRESETS = {
 };
 const DEFAULT_HEADER_SOURCE = HEADER_SOURCE_PRESETS.local;
 
-const resolveHeaderBaseUrl = (): string => {
-  const env = process.env as {
-    HEADER_SOURCE?: string;
-    HEADER_SOURCE_BASEURL?: string;
-  };
-  const requestedHeaderSource = env.HEADER_SOURCE;
-  const requestedHeaderBaseUrl = env.HEADER_SOURCE_BASEURL;
+const getHeaderBaseUrl = (): string => {
+  const requestedHeaderPreset = process.env.HEADER_PRESET_LOCALDEV;
+  const requestedHeaderBaseUrl = process.env.HEADER_BASEURL_LOCALDEV;
 
-  if (requestedHeaderSource && requestedHeaderBaseUrl) {
-    throw new Error('Please specify either HEADER_SOURCE or HEADER_SOURCE_BASEURL, not both.');
+  if (requestedHeaderPreset && requestedHeaderBaseUrl) {
+    throw new Error(
+      'Please specify either HEADER_PRESET_LOCALDEV or HEADER_BASEURL_LOCALDEV, not both.',
+    );
   }
 
-  if (requestedHeaderSource) {
-    if (!Object.hasOwn(HEADER_SOURCE_PRESETS, requestedHeaderSource)) {
+  if (requestedHeaderPreset) {
+    if (!Object.hasOwn(HEADER_SOURCE_PRESETS, requestedHeaderPreset)) {
       throw new Error(
-        `Invalid HEADER_SOURCE: must be one of ${Object.keys(HEADER_SOURCE_PRESETS).join(', ')}.`,
+        `Invalid HEADER_PRESET_LOCALDEV: must be one of "${Object.keys(HEADER_SOURCE_PRESETS).join('", "')}".`,
       );
     }
-    return HEADER_SOURCE_PRESETS[requestedHeaderSource as keyof typeof HEADER_SOURCE_PRESETS];
+    return HEADER_SOURCE_PRESETS[requestedHeaderPreset as keyof typeof HEADER_SOURCE_PRESETS];
+  }
+  if (requestedHeaderBaseUrl) {
+    const parsedUrl = new URL(requestedHeaderBaseUrl);
+    if (parsedUrl.toString() !== requestedHeaderPreset) {
+      throw new Error(
+        `HEADER_BASEURL_LOCALDEV ("${requestedHeaderBaseUrl}") did not parse cleanly: please provide a valid URL.`,
+      );
+    }
+    return requestedHeaderBaseUrl;
   }
 
-  return requestedHeaderBaseUrl || DEFAULT_HEADER_SOURCE;
+  return DEFAULT_HEADER_SOURCE;
 };
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   async rewrites() {
-    const headerBaseUrl = resolveHeaderBaseUrl().replace(/\/$/, '');
+    // Strip any trailing slash: we'll re-add it below
+    const headerBaseUrl = getHeaderBaseUrl().replace(/\/$/, '');
     return [
       {
         source: '/proxy-to-mfe/:path*',

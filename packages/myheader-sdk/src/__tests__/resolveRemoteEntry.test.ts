@@ -33,7 +33,13 @@ describe('resolveRemoteEntry', () => {
       locale: 'en-GB',
     });
 
-    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl);
+    expect(loadRemoteEntryContainer).toHaveBeenCalledWith({
+      baseUrl,
+      onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
+      doDynamicImport: undefined,
+      sharedDependencies: {},
+    });
     expect(container.get).toHaveBeenCalledWith('./en-GB');
     expect(factory).toHaveBeenCalled();
     expect(result).toBe(entryModule);
@@ -67,7 +73,13 @@ describe('resolveRemoteEntry', () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith('https://example.com/asset-include/en-US.json');
-    expect(loadRemoteEntryContainer).toHaveBeenCalledWith(baseUrl);
+    expect(loadRemoteEntryContainer).toHaveBeenCalledWith({
+      baseUrl,
+      onInitializationError: throwAndFailTest,
+      onUncaughtRuntimeError: throwAndFailTest,
+      doDynamicImport: undefined,
+      sharedDependencies: {},
+    });
     expect(container.get).toHaveBeenCalledWith('./en-US');
     expect(factory).toHaveBeenCalled();
     expect(result).toBe(entryModule);

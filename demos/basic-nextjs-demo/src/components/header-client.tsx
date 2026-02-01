@@ -1,55 +1,68 @@
 'use client';
 
-import { createRemoteEntryLoader, rehydrateHeader } from '@spautz/header-sdk';
+import { type HeaderLocale, rehydrateHeader } from '@spautz/myheader-sdk';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
-type HeaderController = Exclude<Awaited<ReturnType<typeof rehydrateHeader>>, Error>;
+type HeaderClientProps = {
+  rootId: string;
+  locale: HeaderLocale;
+};
 
-const loadRemoteEntry = createRemoteEntryLoader(
-  (remoteEntryUrl) => import(/* @vite-ignore */ /* webpackIgnore: true */ remoteEntryUrl),
-);
+const baseUrl = process.env.NEXT_PUBLIC_HEADER_BROWSER_BASE_URL;
 
-export function HeaderClient(): null {
+const reportError = (error: Error, ...details: unknown[]): void => {
+  // biome-ignore lint/suspicious/noConsole: Demo logging only.
+  console.error(error, ...details);
+};
+
+export function HeaderClient({ rootId, locale }: HeaderClientProps): null {
   const pathname = usePathname();
-  const headerControllerRef = useRef<HeaderController | null>(null);
-  const hasMountedRef = useRef(false);
+  const headerCallbacks = useRef<Awaited<ReturnType<typeof rehydrateHeader>>>(null);
+  const latestPathRef = useRef(pathname);
+
+  // Keep the header's urlPath in sync with the browser
+  useEffect(() => {
+    latestPathRef.current = pathname;
+
+    if (headerCallbacks.current) {
+      headerCallbacks.current.setNewOptions({ newUrlPath: pathname });
+    }
+  }, [pathname]);
 
   useEffect(() => {
-    if (hasMountedRef.current) {
-      return;
-    }
-    hasMountedRef.current = true;
-
-    const rootElement = document.getElementById('header');
+    const rootElement = document.getElementById(rootId);
     if (!rootElement) {
-      return;
+      return undefined;
     }
+
+    let wasUnmounted = false;
 
     void rehydrateHeader({
-      // biome-ignore lint/suspicious/noConsole: Local dev doesn't need real reporting: the console is enough
-      onInitializationError: console.error,
-      // biome-ignore lint/suspicious/noConsole: Local dev doesn't need real reporting: the console is enough
-      onUncaughtRuntimeError: console.error,
-      baseUrl: new URL('/proxy-to-mfe/', window.location.origin),
-      locale: 'en-US',
-      loadRemoteEntry,
+      baseUrl,
+      locale,
       rootElement,
-      initialUrlPath: pathname,
+      initialUrlPath: latestPathRef.current,
+      onInitializationError: reportError,
+      onUncaughtRuntimeError: reportError,
+      // NextJS can't/won't pass through dynamic imports from packages, so we have to inject
+      // our own `import()` resolver
+      doDynamicImport: (url) => import(/* turbopackIgnore: true */ url),
     }).then((result) => {
-      if (result instanceof Error) {
+      if (wasUnmounted || !result) {
         return;
       }
-      headerControllerRef.current = result;
+      headerCallbacks.current = result;
+      result.setNewOptions({ newUrlPath: latestPathRef.current });
     });
-  }, [pathname]);
 
-  useEffect(() => {
-    if (!headerControllerRef.current) {
-      return;
-    }
-    headerControllerRef.current.setNewOptions({ newUrlPath: pathname });
-  }, [pathname]);
+    return () => {
+      wasUnmounted = true;
+      headerCallbacks.current?.unmount();
+      headerCallbacks.current = null;
+    };
+    // `locale` and `rootId` should never change, so this should only run on mount/unmount
+  }, [locale, rootId]);
 
   return null;
 }

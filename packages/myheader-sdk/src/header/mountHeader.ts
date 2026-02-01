@@ -17,7 +17,7 @@ type AllMountHeaderOptions = InitializationAndFetchParams & V1Header_MountOption
 
 const mountHeader = async (
   options: AllMountHeaderOptions,
-): Promise<V1Header_MountReturn | Error> => {
+): Promise<V1Header_MountReturn | null> => {
   const browserEntry = await resolveRemoteEntry(options);
 
   const [initializationParams, , mountOptions] = separateFetchParamsFromOtherOptions(options);
@@ -30,7 +30,7 @@ const mountHeader = async (
   } catch (err: unknown) {
     error = convertCaughtValueToError(err);
     onUncaughtRuntimeError(error);
-    return error;
+    return null;
   }
 };
 

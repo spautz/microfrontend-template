@@ -17,7 +17,7 @@ type OptionsForGetPrerenderedHeader = InitializationAndFetchParams & V1Header_Pr
 
 const getPrerenderedHeader = async (
   options: OptionsForGetPrerenderedHeader,
-): Promise<V1Header_PrerenderReturn | Error> => {
+): Promise<V1Header_PrerenderReturn | null> => {
   const [initializationParams, fetchParams, prerenderOptions] =
     separateFetchParamsFromOtherOptions(options);
   const { baseUrl, onInitializationError } = initializationParams;
@@ -36,9 +36,8 @@ const getPrerenderedHeader = async (
 
     return await response.text();
   } catch (err: unknown) {
-    const error = convertCaughtValueToError(err);
-    onInitializationError('Could not fetch prerendered header', error);
-    return error;
+    onInitializationError(convertCaughtValueToError(err), 'Could not fetch prerendered header');
+    return null;
   }
 };
 
