@@ -31,9 +31,9 @@
     // the packages. See https://github.com/vercel/turborepo/discussions/7481
     "//#w:dependencies": {
       "dependsOn": [
-        "@spautz/myheader-api-contracts#build",
-        "@spautz/myheader-microfrontend-app#build",
-        "@spautz/myheader-sdk#build"
+        "@spautz/mfeheader-api-contracts#build",
+        "@spautz/mfeheader-microfrontend-app#build",
+        "@spautz/mfeheader-sdk#build"
       ]
     },
     // Lint checks cover the whole repo, so packages have to be resolvable
@@ -60,9 +60,9 @@
     },
 
     // The SDK's build includes a copy of the microfrontend's assets, as an optional local fallback
-    "@spautz/myheader-sdk#build": {
-      "dependsOn": ["@spautz/myheader-microfrontend-app#build"],
-      "inputs": ["$TURBO_DEFAULT$", "../myheader-microfrontend-app/dist/**"],
+    "@spautz/mfeheader-sdk#build": {
+      "dependsOn": ["@spautz/mfeheader-microfrontend-app#build"],
+      "inputs": ["$TURBO_DEFAULT$", "../mfeheader-microfrontend-app/dist/**"],
       "outputs": ["dist/**"]
     },
 

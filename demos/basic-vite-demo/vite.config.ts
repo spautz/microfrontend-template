@@ -6,9 +6,17 @@ import {
   getHeaderAssetsHTML,
   getHeaderPrerenderHTML,
   type OptionsForGetHeaderPrerenderHTML,
-} from '@spautz/myheader-sdk/server';
+} from '@spautz/mfeheader-sdk/server';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, type Plugin, type UserConfigFnObject } from 'vite';
+
+import skipTheBuildSettings from '../../skip-the-build.ts';
+
+// @TODO: Fix/integrate skip-the-build package
+const customImportConditions = ['import', 'default'];
+if (skipTheBuildSettings.whenToSkip.default) {
+  customImportConditions.unshift(skipTheBuildSettings.settings.importConditionName);
+}
 
 // The microfrontend can be loaded from either a preset address or a custom address.
 // Set either `HEADER_PRESET_LOCALDEV` or `HEADER_BASEURL_LOCALDEV` to choose. Examples:
@@ -99,10 +107,10 @@ function prerenderHeaderVitePlugin(pluginOptions: {
         const headerPrerenderFile = buildPrerenderedHeaderHTMLPath(optionsForHeaderPrerender);
         const headerAssetsFile = buildHeaderAssetsHTMLPath(optionsForHeaderPrerender);
         const localFallbackPrerender = import.meta.resolve(
-          `@spautz/myheader-sdk/local-fallback/${headerPrerenderFile}`,
+          `@spautz/mfeheader-sdk/local-fallback/${headerPrerenderFile}`,
         );
         const localFallbackAssets = import.meta.resolve(
-          `@spautz/myheader-sdk/local-fallback/${headerAssetsFile}`,
+          `@spautz/mfeheader-sdk/local-fallback/${headerAssetsFile}`,
         );
         headerPrerenderHtml = await readFile(new URL(localFallbackPrerender), 'utf8');
         headerAssetsHtml = await readFile(new URL(localFallbackAssets), 'utf8');
@@ -172,6 +180,9 @@ const viteConfig: UserConfigFnObject = defineConfig(({ mode }) => {
         },
       }),
     ],
+    resolve: {
+      conditions: customImportConditions,
+    },
     server: {
       proxy: {
         '/proxy-to-mfe/': {

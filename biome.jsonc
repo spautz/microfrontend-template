@@ -33,7 +33,7 @@
   "overrides": [
     {
       "includes": [
-        "packages/myheader-microfrontend-app/**",
+        "packages/mfeheader-microfrontend-app/**",
         "demos/basic-nextjs-demo/**",
         "demos/basic-react-router-demo/**",
         "demos/basic-tanstack-demo/**",

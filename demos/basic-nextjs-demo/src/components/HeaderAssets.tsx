@@ -4,7 +4,7 @@ import {
   getHeaderAssetsManifest,
   type HeaderLocale,
   type OptionsForGetHeaderAssetsManifest,
-} from '@spautz/myheader-sdk/server';
+} from '@spautz/mfeheader-sdk/server';
 import { headers } from 'next/headers';
 import React from 'react';
 import type { JSX } from 'react/jsx-runtime';

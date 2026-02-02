@@ -37,7 +37,7 @@
     "build:main": "next build"
   },
   "dependencies": {
-    "@spautz/myheader-sdk": "workspace:^",
+    "@spautz/mfeheader-sdk": "workspace:^",
     "next": "16.1.5",
     "react": "catalog:",
     "react-dom": "catalog:"

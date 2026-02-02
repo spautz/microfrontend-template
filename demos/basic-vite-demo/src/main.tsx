@@ -1,4 +1,4 @@
-import { mountHeader } from '@spautz/myheader-sdk';
+import { mountHeader } from '@spautz/mfeheader-sdk';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 

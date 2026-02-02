@@ -38,7 +38,7 @@
     "build:watch": "pnpm run build:clean && vite build --watch"
   },
   "dependencies": {
-    "@spautz/myheader-sdk": "workspace:^",
+    "@spautz/mfeheader-sdk": "workspace:^",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.9.3",
     "@tanstack/react-router": "^1.157.16",

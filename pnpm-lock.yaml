@@ -145,9 +145,9 @@ importers:
 
   demos/basic-nextjs-demo:
     dependencies:
-      '@spautz/myheader-sdk':
+      '@spautz/mfeheader-sdk':
         specifier: workspace:^
-        version: link:../../packages/myheader-sdk
+        version: link:../../packages/mfeheader-sdk
       next:
         specifier: 16.1.5
         version: 16.1.5(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -188,9 +188,9 @@ importers:
       '@react-router/serve':
         specifier: 7.13.0
         version: 7.13.0(react-router@7.13.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(typescript@5.9.3)
-      '@spautz/myheader-sdk':
+      '@spautz/mfeheader-sdk':
         specifier: workspace:^
-        version: link:../../packages/myheader-sdk
+        version: link:../../packages/mfeheader-sdk
       isbot:
         specifier: ^5.1.34
         version: 5.1.34
@@ -234,9 +234,9 @@ importers:
 
   demos/basic-tanstack-demo:
     dependencies:
-      '@spautz/myheader-sdk':
+      '@spautz/mfeheader-sdk':
         specifier: workspace:^
-        version: link:../../packages/myheader-sdk
+        version: link:../../packages/mfeheader-sdk
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.21.0)(yaml@2.8.1))
@@ -316,9 +316,9 @@ importers:
 
   demos/basic-vite-demo:
     dependencies:
-      '@spautz/myheader-sdk':
+      '@spautz/mfeheader-sdk':
         specifier: workspace:^
-        version: link:../../packages/myheader-sdk
+        version: link:../../packages/mfeheader-sdk
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
@@ -345,7 +345,7 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.21.0)(yaml@2.8.1)
 
-  packages/myheader-api-contracts:
+  packages/mfeheader-api-contracts:
     dependencies:
       zod:
         specifier: ^4.3.6
@@ -376,11 +376,11 @@ importers:
         specifier: 'catalog:'
         version: 0.20.1(@arethetypeswrong/core@0.18.2)(@typescript/native-preview@7.0.0-dev.20251202.1)(publint@0.3.17)(typescript@5.9.3)
 
-  packages/myheader-microfrontend-app:
+  packages/mfeheader-microfrontend-app:
     dependencies:
-      '@spautz/myheader-api-contracts':
+      '@spautz/mfeheader-api-contracts':
         specifier: workspace:^
-        version: link:../myheader-api-contracts
+        version: link:../mfeheader-api-contracts
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -410,11 +410,11 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.21.0)(yaml@2.8.1)
 
-  packages/myheader-sdk:
+  packages/mfeheader-sdk:
     dependencies:
-      '@spautz/myheader-api-contracts':
+      '@spautz/mfeheader-api-contracts':
         specifier: workspace:^
-        version: link:../myheader-api-contracts
+        version: link:../mfeheader-api-contracts
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 'catalog:'

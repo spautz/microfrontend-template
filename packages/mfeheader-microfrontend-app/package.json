@@ -1,0 +1,58 @@
+{
+  "name": "@spautz/mfeheader-microfrontend-app",
+  "private": true,
+  "description": "Microfrontend for a header microfrontend, in my opinionated microfrontend-template",
+  "license": "MIT",
+  "homepage": "https://github.com/spautz/microfrontend-template/blob/main/packages/header-microfrontend-app",
+  "bugs": "https://github.com/spautz/microfrontend-template/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spautz/microfrontend-template.git",
+    "directory": "header-microfrontend-app"
+  },
+  "author": {
+    "name": "Steven Pautz",
+    "url": "https://stevenpautz.com"
+  },
+  "source": "./src/main.tsx",
+  "type": "module",
+  "scripts": {
+    "____ STANDARD APP TASKS ____________________________________________": "",
+    "all": "turbo run pipeline-all",
+    "all:ci": "turbo run pipeline-ci --ui=stream",
+    "build": "pnpm run build:clean && pnpm run build:app && pnpm run build:prerender",
+    "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.turbo ./*.log",
+    "dev": "pnpm run \"/(serve:dev|build:app:watch|build:prerender:watch)/\" ",
+    "lint": "biome check --write ",
+    "lint:verify": "biome check ",
+    "start": "turbo run build && pnpm run serve:prod",
+    "test:clean": "rimraf ./coverage",
+    "test": "pnpm run test:clean       && vitest run --coverage",
+    "test:ci": "pnpm run test:clean    && vitest run --coverage --bail 1",
+    "test:ui": "pnpm run test:clean    && vitest --ui",
+    "test:watch": "pnpm run test:clean && vitest watch --coverage",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "____ BUILD & VALIDATION TASKS ______________________________________": "",
+    "build:clean": "rimraf --glob ./dist ./*.tgz",
+    "build:app": "vite build",
+    "build:app:watch": "vite build --watch",
+    "build:prerender": "node --experimental-strip-types ./scripts/prerender.ts",
+    "build:prerender:watch": "node --experimental-strip-types --watch --watch-path=./src --watch-path=./scripts ./scripts/prerender.ts",
+    "serve:dev": "vite --port 3000",
+    "serve:prod": "vite preview --port 3000"
+  },
+  "dependencies": {
+    "@spautz/mfeheader-api-contracts": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "1.4.1",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "5.1.2",
+    "babel-plugin-react-compiler": "1.0.0",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

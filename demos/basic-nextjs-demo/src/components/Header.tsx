@@ -4,7 +4,7 @@ import {
   getHeaderPrerenderHTML,
   type HeaderLocale,
   type OptionsForGetHeaderPrerenderHTML,
-} from '@spautz/myheader-sdk/server';
+} from '@spautz/mfeheader-sdk/server';
 import { headers } from 'next/headers';
 import type { JSX } from 'react/jsx-runtime';
 import { HeaderClient } from './Header-client.tsx';

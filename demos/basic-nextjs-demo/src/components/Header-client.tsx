@@ -1,6 +1,6 @@
 'use client';
 
-import { type HeaderLocale, rehydrateHeader } from '@spautz/myheader-sdk';
+import { type HeaderLocale, rehydrateHeader } from '@spautz/mfeheader-sdk';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 

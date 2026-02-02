@@ -1,1 +1,1 @@
-import './packages/myheader-microfrontend-app/setupTests.ts';
+import './packages/mfeheader-microfrontend-app/setupTests.ts';
