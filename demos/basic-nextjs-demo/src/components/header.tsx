@@ -18,11 +18,13 @@ const reportServerError = (error: Error, ...extraDetails: Array<unknown>): void 
 };
 
 const getHeaderBaseUrlForServer = (): string => {
-  const headerBaseUrl = process.env.HEADER_SERVER_BASE_URL;
-  if (!headerBaseUrl) {
+  const rawBaseUrl = process.env.HEADER_SERVER_BASE_URL;
+  if (!rawBaseUrl) {
     throw new Error('Header base URL was not resolved. Set HEADER_SERVER_BASE_URL.');
   }
-  return new URL(headerBaseUrl).toString();
+  // Parse to ensure it's valid
+  const headerBaseUrl = new URL(rawBaseUrl);
+  return headerBaseUrl.toString();
 };
 
 const getRequestUrl = (requestHeaders: Awaited<ReturnType<typeof headers>>): URL | null => {

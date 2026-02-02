@@ -9,8 +9,6 @@ type HeaderClientProps = {
   locale: HeaderLocale;
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_HEADER_BROWSER_BASE_URL;
-
 const reportError = (error: Error, ...details: unknown[]): void => {
   // biome-ignore lint/suspicious/noConsole: Demo logging only.
   console.error(error, ...details);
@@ -39,7 +37,7 @@ export function HeaderClient({ rootId, locale }: HeaderClientProps): null {
     let wasUnmounted = false;
 
     void rehydrateHeader({
-      baseUrl,
+      baseUrl: new URL(process.env.NEXT_PUBLIC_HEADER_BROWSER_BASE_URL, window.location.origin),
       locale,
       rootElement,
       initialUrlPath: latestPathRef.current,

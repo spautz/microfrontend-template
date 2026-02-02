@@ -42,6 +42,7 @@ run_command "rm -rf
 
 for DIRECTORY in '.' 'docs-website' 'demos/*' 'external-tests/*' 'packages/*' ; do
   run_command "rm -rf
+    $DIRECTORY/.output/
     $DIRECTORY/.turbo/
     $DIRECTORY/.yalc/
     $DIRECTORY/build/

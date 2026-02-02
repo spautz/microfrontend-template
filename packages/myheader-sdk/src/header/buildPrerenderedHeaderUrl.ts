@@ -1,5 +1,5 @@
 import {
-  buildUrl,
+  buildFullUrl,
   convertV1FetchParamsToEntryPoint,
   type V1FetchParams,
   type V1Header_PrerenderOptions,
@@ -8,15 +8,10 @@ import {
 const buildPrerenderedHeaderUrl = (
   baseUrl: string | URL,
   fetchParams: V1FetchParams,
-  prerenderOptions: V1Header_PrerenderOptions,
-): URL => {
+  _prerenderOptions: V1Header_PrerenderOptions,
+): string => {
   const entryPointIdentifier = convertV1FetchParamsToEntryPoint(fetchParams);
-  const prerenderUrl = new URL(buildUrl(`prerenders/${entryPointIdentifier}.html`, baseUrl));
-
-  if (prerenderOptions.initialUrlPath != null) {
-    prerenderUrl.searchParams.set('initialUrlPath', prerenderOptions.initialUrlPath);
-  }
-
+  const prerenderUrl = buildFullUrl(baseUrl, `prerenders/${entryPointIdentifier}.html`);
   return prerenderUrl;
 };
 

@@ -1,19 +1,30 @@
-const normalizeBaseUrl = (baseUrl: string | URL): string => {
-  if (!baseUrl) {
-    return baseUrl;
+/**
+ * Concatenates the path onto the baseUrl. The baseUrl can be either a full URL or an
+ * absolute path. In general this should be used browser-side.
+ */
+const buildUrlOrPath = (baseUrlOrBasePath: string | URL, path: string): string => {
+  if (!baseUrlOrBasePath) {
+    throw new Error(`Invalid baseUrl: ${baseUrlOrBasePath}`);
   }
-  const baseUrlString = baseUrl.toString();
+  if (!path) {
+    throw new Error(`Invalid path: ${path}`);
+  }
 
-  return baseUrlString.endsWith('/') ? baseUrlString : `${baseUrlString}/`;
+  const base = baseUrlOrBasePath instanceof URL ? baseUrlOrBasePath.toString() : baseUrlOrBasePath;
+
+  const baseWithTrailingSlash = base.endsWith('/') ? base : `${base}/`;
+  const pathWithoutLeadingSlash = path.startsWith('/') ? path.slice(1) : path;
+
+  return baseWithTrailingSlash + pathWithoutLeadingSlash;
 };
 
-const normalizePath = (path: string): string => (path.startsWith('/') ? path.slice(1) : path);
-
-const buildUrl = (path: string, baseUrl: string | URL): URL => {
-  return new URL(normalizePath(path), normalizeBaseUrl(baseUrl));
+/**
+ * Concatenates the path onto the baseUrl. The baseUrl must be a full URL.
+ * In general this should be used server-side.
+ */
+const buildFullUrl = (fullBaseUrl: string | URL, path: string): string => {
+  // Parse the URL to ensure it's a full URL
+  return buildUrlOrPath(new URL(fullBaseUrl), path);
 };
 
-const buildUrlString = (path: string, baseUrl: string | URL): string =>
-  buildUrl(path, baseUrl).toString();
-
-export { buildUrl, buildUrlString };
+export { buildUrlOrPath, buildFullUrl };

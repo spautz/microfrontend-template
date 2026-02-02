@@ -29,7 +29,7 @@ const getPrerenderedHeader = async (
 
     const prerenderUrl = buildPrerenderedHeaderUrl(baseUrl, fetchParams, prerenderOptions);
 
-    const response = await fetch(prerenderUrl.toString());
+    const response = await fetch(prerenderUrl);
     if (!response.ok) {
       throw new Error(`Prerender fetch failed: ${response.status} ${response.statusText}`);
     }

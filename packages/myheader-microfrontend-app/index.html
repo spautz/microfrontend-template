@@ -39,6 +39,10 @@
        * `v1Header_mount` mounts a React app into a target element
        */
       v1Header_mount: (browserEntry, _prerenderEntry) => {
+        console.log('calling MFE mount: ', browserEntry, {
+          rootElement,
+          initialUrlPath: window.location.pathname
+        });
         browserEntry.v1Header_mount({
           rootElement,
           initialUrlPath: window.location.pathname
@@ -109,13 +113,17 @@
     let prerenderModule;
     try {
       const entryPointIdentifier = convertV1FetchParamsToEntryPoint({locale});
-      browserModule = (await (import(/* @vite-ignore */ `/src/entryPoints/browser/${entryPointIdentifier}.tsx`)));
-      prerenderModule = (await (import(/* @vite-ignore */ `/src/entryPoints/prerender/${entryPointIdentifier}.tsx`)));
+      const browserUrl = new URL(`./src/entryPoints/browser/${entryPointIdentifier}.tsx`, import.meta.url).href;
+      const prerenderUrl = new URL(`./src/entryPoints/prerender/${entryPointIdentifier}.tsx`, import.meta.url).href;
+      browserModule = await import(/* @vite-ignore */ browserUrl);
+      prerenderModule = await import(/* @vite-ignore */ prerenderUrl);
     } catch (_err) {
       try {
         console.error(`Unknown locale "${locale}". Falling back to default: "${V1_DEFAULT_LOCALE}".`);
-        browserModule = (await (import(/* @vite-ignore */ `/src/entryPoints/browser/${V1_DEFAULT_LOCALE}.tsx`)));
-        prerenderModule = (await (import(/* @vite-ignore */ `/src/entryPoints/prerender/${V1_DEFAULT_LOCALE}.tsx`)));
+        const browserUrl = new URL(`./src/entryPoints/browser/${V1_DEFAULT_LOCALE}.tsx`, import.meta.url).href;
+        const prerenderUrl = new URL(`./src/entryPoints/prerender/${V1_DEFAULT_LOCALE}.tsx`, import.meta.url).href;
+        browserModule = await import(/* @vite-ignore */ browserUrl);
+        prerenderModule = await import(/* @vite-ignore */ prerenderUrl);
       } catch (_err2) {
         console.error('Could not resolve microfrontend module. This should never happen.')
       }

@@ -26,26 +26,6 @@ describe('getPrerenderedHeader', () => {
     expect(result).toBe('<div>header</div>');
   });
 
-  it('adds initialUrlPath to the request when provided', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      text: vi.fn().mockResolvedValue('<div>header</div>'),
-    });
-    vi.stubGlobal('fetch', fetchMock);
-
-    await getPrerenderedHeader({
-      baseUrl: new URL('https://example.com/mfe/'),
-      onInitializationError: throwAndFailTest,
-      onUncaughtRuntimeError: throwAndFailTest,
-      locale: 'en-GB',
-      initialUrlPath: '/drinks',
-    });
-
-    expect(fetchMock).toHaveBeenCalledWith(
-      'https://example.com/mfe/prerenders/en-GB.html?initialUrlPath=%2Fdrinks',
-    );
-  });
-
   it('reports an error and reports null when the request fails', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: false,

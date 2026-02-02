@@ -39,7 +39,7 @@
     "size-check": "source-map-explorer dist/**/*.js"
   },
   "dependencies": {
-    "@spautz/header-sdk": "workspace:^"
+    "@spautz/myheader-sdk": "workspace:^"
   },
   "devDependencies": {
     "@types/react": "catalog:",

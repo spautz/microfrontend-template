@@ -1,4 +1,4 @@
-import { buildUrlString } from '@spautz/myheader-api-contracts/v1';
+import { buildUrlOrPath } from '@spautz/myheader-api-contracts/v1';
 import classes from './Header.module.css';
 
 interface HeaderProps {
@@ -20,13 +20,15 @@ const Header: React.FC<HeaderProps> = (props) => {
     {
       label: linkLabels.coffee,
       path: '/coffee',
-      baseUrl: import.meta.env.VITE_REACTROUTER_APP_BASEURL,
+      baseUrl: import.meta.env.VITE_REACT_ROUTER_APP_BASEURL,
     },
-    { label: linkLabels.tea, path: '/tea', baseUrl: import.meta.env.VITE_REACTROUTER_APP_BASEURL },
+    { label: linkLabels.tea, path: '/tea', baseUrl: import.meta.env.VITE_REACT_ROUTER_APP_BASEURL },
     { label: linkLabels.beer, path: '/beer', baseUrl: import.meta.env.VITE_TANSTACK_APP_BASEURL },
     { label: linkLabels.wine, path: '/wine', baseUrl: import.meta.env.VITE_TANSTACK_APP_BASEURL },
     { label: linkLabels.water, path: '/water', baseUrl: import.meta.env.VITE_NEXTJS_APP_BASEURL },
   ];
+
+  console.log('navLinks = ', navLinks);
 
   return (
     <header className={classes.header}>
@@ -35,7 +37,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         <ul className={classes.navList}>
           {navLinks.map((link) => (
             <li key={link.path} className={classes.navItem}>
-              <a className={classes.navLink} href={buildUrlString(link.path, link.baseUrl)}>
+              <a className={classes.navLink} href={buildUrlOrPath(link.baseUrl, link.path)}>
                 {link.label}
               </a>
             </li>

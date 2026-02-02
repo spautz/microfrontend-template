@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/vitest';
 
 const testEnvDefaults: Record<string, string> = {
   VITE_NEXTJS_APP_BASEURL: 'http://localhost:3001',
-  VITE_REACTROUTER_APP_BASEURL: 'http://localhost:3002',
+  VITE_REACT_ROUTER_APP_BASEURL: 'http://localhost:3002',
   VITE_TANSTACK_APP_BASEURL: 'http://localhost:3003',
   VITE_VITE_APP_BASEURL: 'http://localhost:3004',
 };

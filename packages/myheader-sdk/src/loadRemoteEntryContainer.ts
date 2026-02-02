@@ -1,5 +1,5 @@
 import {
-  buildUrlString,
+  buildUrlOrPath,
   REMOTE_MODULE_CONTAINER_FILENAME,
 } from '@spautz/myheader-api-contracts/v1';
 import type { InitializationParams } from './resolveRemoteEntry.ts';
@@ -19,7 +19,7 @@ const REMOTE_ENTRY_FILENAME = `assets/${REMOTE_MODULE_CONTAINER_FILENAME}`;
 
 /**
  * If a consumer's build system can't/won't ignore pass through dynamic imports from packages,
- * they'll have to inject their own `import()` resolver instead of using the default.
+ * the consumer has to inject their own `import()` resolver instead of using this default.
  * For that case, this default needs to *not* be detected as an `import()` by their build system.
  * Wrapping it up as a `new Function()` just obfuscates it.
  */
@@ -34,7 +34,7 @@ const loadRemoteEntryContainer = async (
 ): Promise<RemoteEntryContainer> => {
   const { baseUrl, doDynamicImport, sharedDependencies } = initializationParams;
 
-  const remoteEntryUrl = buildUrlString(REMOTE_ENTRY_FILENAME, baseUrl);
+  const remoteEntryUrl = buildUrlOrPath(baseUrl, REMOTE_ENTRY_FILENAME);
   const containerPromise = (doDynamicImport || doDynamicImport_default)(
     remoteEntryUrl,
   ) as Promise<RemoteEntryContainer>;
