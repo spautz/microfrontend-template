@@ -1,6 +1,9 @@
-import type {
-  V1Header_PrerenderOptions,
-  V1Header_PrerenderReturn,
+import {
+  buildFullUrl,
+  convertV1FetchParamsToEntryPoint,
+  type V1FetchParams,
+  type V1Header_PrerenderOptions,
+  type V1Header_PrerenderReturn,
 } from '@spautz/myheader-api-contracts/v1';
 
 import {
@@ -8,17 +11,28 @@ import {
   separateFetchParamsFromOtherOptions,
 } from '../resolveRemoteEntry.ts';
 import { convertCaughtValueToError } from '../utils.ts';
-import { buildPrerenderedHeaderUrl } from './buildPrerenderedHeaderUrl.ts';
+
+const buildPrerenderedHeaderHTMLPath = (fetchParams: V1FetchParams): string => {
+  const entryPointIdentifier = convertV1FetchParamsToEntryPoint(fetchParams);
+  return `prerenders/${entryPointIdentifier}.html`;
+};
+
+const buildPrerenderedHeaderHTMLUrl = (
+  baseUrl: string | URL,
+  fetchParams: V1FetchParams,
+): string => {
+  return buildFullUrl(baseUrl, buildPrerenderedHeaderHTMLPath(fetchParams));
+};
 
 // This should be `baseUrl` + `fetchParams` + the options for v1Header_prerender()
 // The keys are duplicated here (instead of inherited from those places) so that we'll get
 // an error if something changes unexpectedly.
-type OptionsForGetPrerenderedHeader = InitializationAndFetchParams & V1Header_PrerenderOptions;
+type OptionsForGetHeaderPrerenderHTML = InitializationAndFetchParams & V1Header_PrerenderOptions;
 
-const getPrerenderedHeader = async (
-  options: OptionsForGetPrerenderedHeader,
+const getHeaderPrerenderHTML = async (
+  options: OptionsForGetHeaderPrerenderHTML,
 ): Promise<V1Header_PrerenderReturn | null> => {
-  const [initializationParams, fetchParams, prerenderOptions] =
+  const [initializationParams, fetchParams, _prerenderOptions] =
     separateFetchParamsFromOtherOptions(options);
   const { baseUrl, onInitializationError } = initializationParams;
 
@@ -27,7 +41,7 @@ const getPrerenderedHeader = async (
       throw new Error('Global fetch is not available in this runtime.');
     }
 
-    const prerenderUrl = buildPrerenderedHeaderUrl(baseUrl, fetchParams, prerenderOptions);
+    const prerenderUrl = buildPrerenderedHeaderHTMLUrl(baseUrl, fetchParams);
 
     const response = await fetch(prerenderUrl);
     if (!response.ok) {
@@ -41,5 +55,5 @@ const getPrerenderedHeader = async (
   }
 };
 
-export type { OptionsForGetPrerenderedHeader };
-export { getPrerenderedHeader };
+export type { OptionsForGetHeaderPrerenderHTML };
+export { buildPrerenderedHeaderHTMLPath, buildPrerenderedHeaderHTMLUrl, getHeaderPrerenderHTML };

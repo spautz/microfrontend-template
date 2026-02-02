@@ -3,8 +3,11 @@
 
 import type { V1FetchParams } from '@spautz/myheader-api-contracts/v1';
 
-export * from './header/getPrerenderedHeader.js';
-export { getRemoteEntryPointIdentifier } from './resolveRemoteEntry.js';
+export * from './header/getHeaderAssetsHTML.js';
+export * from './header/getHeaderAssetsManifest.js';
+export * from './header/getHeaderAssetsManifest.js';
+export * from './header/getHeaderAssetsPrefetchHTML.js';
+export * from './header/getHeaderPrerenderHTML.js';
 
 type HeaderLocale = V1FetchParams['locale'];
 

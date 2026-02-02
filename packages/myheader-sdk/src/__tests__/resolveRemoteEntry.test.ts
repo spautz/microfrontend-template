@@ -72,7 +72,7 @@ describe('resolveRemoteEntry', () => {
       locale: 'en-US',
     });
 
-    expect(fetchMock).toHaveBeenCalledWith('https://example.com/asset-include/en-US.json');
+    expect(fetchMock).toHaveBeenCalledWith('https://example.com/asset-include/en-US-manifest.json');
     expect(loadRemoteEntryContainer).toHaveBeenCalledWith({
       baseUrl,
       onInitializationError: throwAndFailTest,

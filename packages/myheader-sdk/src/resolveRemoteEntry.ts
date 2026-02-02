@@ -93,7 +93,7 @@ const resolveRemoteEntry = async (
 
   try {
     const entryPointIdentifier = convertV1FetchParamsToEntryPoint(fetchParams);
-    await ensureHeaderStyles({ baseUrl, entryPointIdentifier }).catch((error) => {
+    await ensureHeaderStyles({ baseUrl, fetchParams }).catch((error) => {
       onInitializationError(convertCaughtValueToError(error), 'Could not preload header styles');
     });
     const entryPoint = `./${entryPointIdentifier}`;

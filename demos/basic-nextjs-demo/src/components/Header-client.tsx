@@ -21,9 +21,8 @@ export function HeaderClient({ rootId, locale }: HeaderClientProps): null {
 
   // Keep the header's urlPath in sync with the browser
   useEffect(() => {
-    latestPathRef.current = pathname;
-
-    if (headerCallbacks.current) {
+    if (headerCallbacks.current && latestPathRef.current !== pathname) {
+      latestPathRef.current = pathname;
       headerCallbacks.current.setNewOptions({ newUrlPath: pathname });
     }
   }, [pathname]);

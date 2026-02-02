@@ -1,13 +1,13 @@
 import 'server-only';
 
 import {
-  getPrerenderedHeader,
+  getHeaderPrerenderHTML,
   type HeaderLocale,
-  type OptionsForGetPrerenderedHeader,
+  type OptionsForGetHeaderPrerenderHTML,
 } from '@spautz/myheader-sdk/server';
 import { headers } from 'next/headers';
 import type { JSX } from 'react/jsx-runtime';
-import { HeaderClient } from './header-client';
+import { HeaderClient } from './Header-client.tsx';
 
 const HEADER_ROOT_ELEMENT_ID = 'header-mfe';
 const DEFAULT_HEADER_LOCALE = 'en-US';
@@ -53,26 +53,20 @@ export async function Header(): Promise<JSX.Element> {
   const headerLocale = getLocaleFromRequest(headersList, requestUrl);
   const initialUrlPath = requestUrl?.pathname ?? '/';
 
-  let html: string | null = null;
-
-  const result = await getPrerenderedHeader({
+  const headerPrerenderHTML = await getHeaderPrerenderHTML({
     baseUrl: headerBaseUrl,
     initialUrlPath,
-    locale: headerLocale as OptionsForGetPrerenderedHeader['locale'],
+    locale: headerLocale as OptionsForGetHeaderPrerenderHTML['locale'],
     onInitializationError: reportServerError,
     onUncaughtRuntimeError: reportServerError,
   });
-
-  if (result) {
-    html = result;
-  }
 
   return (
     <>
       <div
         id={HEADER_ROOT_ELEMENT_ID}
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional injection from trusted source
-        dangerouslySetInnerHTML={html ? { __html: html } : undefined}
+        dangerouslySetInnerHTML={headerPrerenderHTML ? { __html: headerPrerenderHTML } : undefined}
       />
       <HeaderClient rootId={HEADER_ROOT_ELEMENT_ID} locale={headerLocale} />
     </>

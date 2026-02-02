@@ -1,9 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import * as process from 'node:process';
 import {
-  getPrerenderedHeader,
-  getRemoteEntryPointIdentifier,
-  type OptionsForGetPrerenderedHeader,
+  buildHeaderAssetsHTMLPath,
+  buildPrerenderedHeaderHTMLPath,
+  getHeaderAssetsHTML,
+  getHeaderPrerenderHTML,
+  type OptionsForGetHeaderPrerenderHTML,
 } from '@spautz/myheader-sdk/server';
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, type Plugin, type UserConfigFnObject } from 'vite';
@@ -25,27 +27,42 @@ const HEADER_SOURCE_PRESETS = {
 const DEFAULT_HEADER_SOURCE = HEADER_SOURCE_PRESETS.local;
 const ENABLE_LOCAL_FALLBACK_FOR_HEADER = true;
 
-const headerMarkerInHtml = '<!--prerender:header-->';
+const headerPrerenderMarkerInHtml = '<!--prerender:header-->';
+const headerAssetsMarkerInHtml = '<!--prerender:headerAssets-->';
 
 // @TODO: Move this into the SDK, maybe?
 function prerenderHeaderVitePlugin(pluginOptions: {
-  headerBaseUrl: OptionsForGetPrerenderedHeader['baseUrl'];
-  headerUrlPath: OptionsForGetPrerenderedHeader['initialUrlPath'];
-  headerLocale: OptionsForGetPrerenderedHeader['locale'] | string;
-  headerMarkerInHtml: string;
+  headerBaseUrl: OptionsForGetHeaderPrerenderHTML['baseUrl'];
+  headerUrlPath: OptionsForGetHeaderPrerenderHTML['initialUrlPath'];
+  headerLocale: OptionsForGetHeaderPrerenderHTML['locale'] | string;
+  headerPrerenderMarkerInHtml: string;
+  headerAssetsMarkerInHtml: string;
 }): Plugin {
-  const { headerBaseUrl, headerUrlPath, headerLocale, headerMarkerInHtml } = pluginOptions;
+  const {
+    headerBaseUrl,
+    headerUrlPath,
+    headerLocale,
+    headerPrerenderMarkerInHtml,
+    headerAssetsMarkerInHtml,
+  } = pluginOptions;
 
   return {
     name: 'prerender-header',
     enforce: 'post',
     async transformIndexHtml(html: string) {
-      if (!html.includes(headerMarkerInHtml)) {
+      if (!html.includes(headerPrerenderMarkerInHtml)) {
         this.warn(
-          `basic-vite-demo expected to find a prerender marker for the header microfrontend ("${headerMarkerInHtml}") in index.html, but none was found.`,
+          `basic-vite-demo expected to find a prerender marker for the header microfrontend ("${headerPrerenderMarkerInHtml}") in index.html, but none was found.`,
         );
         return html;
       }
+      if (!html.includes(headerAssetsMarkerInHtml)) {
+        this.warn(
+          `basic-vite-demo expected to find a prerender marker for the header microfrontend ("${headerPrerenderMarkerInHtml}") in index.html, but none was found.`,
+        );
+        return html;
+      }
+
       // Make sure baseUrl is valid
       const parsedHeaderBaseUrl = new URL(headerBaseUrl).toString();
       if (parsedHeaderBaseUrl !== headerBaseUrl) {
@@ -54,11 +71,12 @@ function prerenderHeaderVitePlugin(pluginOptions: {
         );
       }
 
-      let headerHtml: string;
-      const optionsForHeaderPrerender: OptionsForGetPrerenderedHeader = {
+      let headerPrerenderHtml: string;
+      let headerAssetsHtml: string;
+      const optionsForHeaderPrerender: OptionsForGetHeaderPrerenderHTML = {
         baseUrl: headerBaseUrl,
         initialUrlPath: headerUrlPath,
-        locale: headerLocale as OptionsForGetPrerenderedHeader['locale'],
+        locale: headerLocale as OptionsForGetHeaderPrerenderHTML['locale'],
         onInitializationError: (_message: unknown, error: unknown) => {
           throw error;
         },
@@ -68,7 +86,8 @@ function prerenderHeaderVitePlugin(pluginOptions: {
       };
 
       try {
-        headerHtml = (await getPrerenderedHeader(optionsForHeaderPrerender)) as string;
+        headerPrerenderHtml = (await getHeaderPrerenderHTML(optionsForHeaderPrerender)) as string;
+        headerAssetsHtml = (await getHeaderAssetsHTML(optionsForHeaderPrerender)) as string;
         this.info(`Using prerender from ${headerBaseUrl}`);
       } catch (error) {
         this.warn(`Could not resolve prerender from ${headerBaseUrl}: ${error}`);
@@ -77,14 +96,21 @@ function prerenderHeaderVitePlugin(pluginOptions: {
         }
 
         this.warn('Falling back to local copy from SDK Package.');
-        const entryPoint = getRemoteEntryPointIdentifier(optionsForHeaderPrerender);
+        const headerPrerenderFile = buildPrerenderedHeaderHTMLPath(optionsForHeaderPrerender);
+        const headerAssetsFile = buildHeaderAssetsHTMLPath(optionsForHeaderPrerender);
         const localFallbackPrerender = import.meta.resolve(
-          `@spautz/myheader-sdk/local-fallback/prerenders/${entryPoint}.html`,
+          `@spautz/myheader-sdk/local-fallback/${headerPrerenderFile}`,
         );
-        headerHtml = await readFile(new URL(localFallbackPrerender), 'utf8');
+        const localFallbackAssets = import.meta.resolve(
+          `@spautz/myheader-sdk/local-fallback/${headerAssetsFile}`,
+        );
+        headerPrerenderHtml = await readFile(new URL(localFallbackPrerender), 'utf8');
+        headerAssetsHtml = await readFile(new URL(localFallbackAssets), 'utf8');
       }
 
-      return html.replace(headerMarkerInHtml, headerHtml);
+      return html
+        .replace(headerAssetsMarkerInHtml, headerAssetsHtml)
+        .replace(headerPrerenderMarkerInHtml, headerPrerenderHtml);
     },
   };
 }
@@ -133,7 +159,13 @@ const viteConfig: UserConfigFnObject = defineConfig(({ mode }) => {
       sourcemap: true,
     },
     plugins: [
-      prerenderHeaderVitePlugin({ headerBaseUrl, headerUrlPath, headerLocale, headerMarkerInHtml }),
+      prerenderHeaderVitePlugin({
+        headerBaseUrl,
+        headerUrlPath,
+        headerLocale,
+        headerPrerenderMarkerInHtml,
+        headerAssetsMarkerInHtml,
+      }),
       react({
         babel: {
           plugins: [['babel-plugin-react-compiler']],

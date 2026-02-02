@@ -185,7 +185,7 @@ const buildAssetInclude = () => ({
         this.warn(`Missing manifest entry for ${entryKey}`);
       }
 
-      const jsonPath = resolve(assetIncludeRoot, `${entryPoint}.json`);
+      const jsonPath = resolve(assetIncludeRoot, `${entryPoint}-manifest.json`);
       const headHtmlPath = resolve(assetIncludeRoot, `${entryPoint}-head.html`);
       const prefetchHtmlPath = resolve(assetIncludeRoot, `${entryPoint}-prefetch.html`);
 

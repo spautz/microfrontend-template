@@ -21,7 +21,7 @@
     "all": "turbo run pipeline-all",
     "all:ci": "turbo run pipeline-ci --ui=stream",
     "build": "pnpm run build:clean && pnpm run build:main",
-    "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.nitro ./.tanstack ./.turbo ./*.log",
+    "clean": "pnpm run build:clean && pnpm run test:clean && rimraf --glob ./node_modules/.cache ./.nitro ./.output ./.tanstack ./.turbo ./*.log",
     "dev": "vite dev --port 3003",
     "lint": "biome check --write .",
     "lint:verify": "biome check .",
@@ -38,7 +38,7 @@
     "build:watch": "pnpm run build:clean && vite build --watch"
   },
   "dependencies": {
-    "@spautz/header-sdk": "workspace:^",
+    "@spautz/myheader-sdk": "workspace:^",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.9.3",
     "@tanstack/react-router": "^1.157.16",

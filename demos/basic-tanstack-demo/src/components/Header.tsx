@@ -13,10 +13,7 @@ import { useState } from 'react';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  type GroupedExpandedState = {
-    StartSSRDemo?: boolean;
-  };
-  const [groupedExpanded, setGroupedExpanded] = useState<GroupedExpandedState>({});
+  const [groupedExpanded, setGroupedExpanded] = useState<Record<string, boolean>>({});
 
   return (
     <>
@@ -114,18 +111,18 @@ export default function Header() {
               onClick={() =>
                 setGroupedExpanded((prev) => ({
                   ...prev,
-                  StartSSRDemo: !prev.StartSSRDemo,
+                  StartSSRDemo: !prev['StartSSRDemo'],
                 }))
               }
             >
-              {groupedExpanded.StartSSRDemo ? (
+              {groupedExpanded['StartSSRDemo'] ? (
                 <ChevronDown size={20} />
               ) : (
                 <ChevronRight size={20} />
               )}
             </button>
           </div>
-          {groupedExpanded.StartSSRDemo && (
+          {groupedExpanded['StartSSRDemo'] && (
             <div className="flex flex-col ml-4">
               <Link
                 to="/demo/start/ssr/spa-mode"

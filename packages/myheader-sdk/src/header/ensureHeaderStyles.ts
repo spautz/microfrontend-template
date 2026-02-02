@@ -1,8 +1,10 @@
-import { buildUrlOrPath } from '@spautz/myheader-api-contracts/v1';
+import { buildUrlOrPath, type V1FetchParams } from '@spautz/myheader-api-contracts/v1';
+
+import { buildHeaderAssetsManifestUrl } from './getHeaderAssetsManifest.ts';
 
 type EnsureHeaderStylesOptions = {
   baseUrl: string | URL;
-  entryPointIdentifier: string;
+  fetchParams: V1FetchParams;
 };
 
 type AssetIncludePayload = {
@@ -88,13 +90,13 @@ const loadStylesheet = (href: string): Promise<void> => {
 
 const ensureHeaderStyles = async ({
   baseUrl,
-  entryPointIdentifier,
+  fetchParams,
 }: EnsureHeaderStylesOptions): Promise<void> => {
   if (typeof document === 'undefined' || typeof fetch !== 'function') {
     return;
   }
 
-  const includeUrl = buildUrlOrPath(baseUrl, `asset-include/${entryPointIdentifier}.json`);
+  const includeUrl = buildHeaderAssetsManifestUrl(baseUrl, fetchParams);
 
   try {
     const response = await fetch(includeUrl);

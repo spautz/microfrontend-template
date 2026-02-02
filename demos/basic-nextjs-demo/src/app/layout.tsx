@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
 import type { JSX } from 'react/jsx-runtime';
-import { Header } from '@/components/header';
+import { Header } from '@/components/Header.tsx';
+import { HeaderAssets } from '@/components/HeaderAssets.tsx';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,6 +28,9 @@ export default function RootLayout({
 }>): JSX.Element {
   return (
     <html lang="en">
+      <head>
+        <HeaderAssets />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Header />
         {children}

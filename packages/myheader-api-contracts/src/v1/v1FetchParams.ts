@@ -34,7 +34,7 @@ const V1_DEFAULT_LOCALE: (typeof ENTRY_POINTS_FOR_V1_SDK)[number] = 'en-US';
  * To accommodate future unknown locales, we allow any valid-looking locale -- even if it's not
  * in the above list.
  */
-const v1FetchParamsSchema = z.strictObject({
+const v1FetchParamsSchema = z.looseObject({
   locale: z.string().regex(entryPointValidationRegex, 'Invalid locale code').nullable().optional(),
 });
 
