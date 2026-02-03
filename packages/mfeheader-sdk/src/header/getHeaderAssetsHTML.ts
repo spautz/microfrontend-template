@@ -39,7 +39,15 @@ const getHeaderAssetsHTML = async (
       throw new Error(`Header assets HTML fetch failed: ${response.status} ${response.statusText}`);
     }
 
-    return await response.text();
+    const rawHtml = await response.text();
+    // Transform all URLS to be absolute, since we don't know the base URL of the consumer's page
+    // @TODO: Move this to mfe-utils
+    const baseUrlString = baseUrl.toString();
+    const baseUrlWithoutTrailingSlash = baseUrlString.endsWith('/')
+      ? baseUrlString.substring(0, baseUrlString.length - 1)
+      : baseUrlString;
+    const transformedHtml = rawHtml.replaceAll('{{$BASE_URL}}', baseUrlWithoutTrailingSlash);
+    return transformedHtml;
   } catch (err: unknown) {
     onInitializationError(convertCaughtValueToError(err), 'Could not fetch header assets HTML');
     return null;

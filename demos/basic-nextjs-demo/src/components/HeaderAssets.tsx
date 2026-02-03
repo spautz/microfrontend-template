@@ -1,6 +1,7 @@
 import 'server-only';
 
 import {
+  buildUrlOrPath,
   getHeaderAssetsManifest,
   type HeaderLocale,
   type OptionsForGetHeaderAssetsManifest,
@@ -14,6 +15,14 @@ const DEFAULT_HEADER_LOCALE = 'en-US';
 const reportServerError = (error: Error, ...extraDetails: Array<unknown>): void => {
   // biome-ignore lint/suspicious/noConsole: Demo logging only.
   console.error(error, ...extraDetails);
+};
+
+const getHeaderBaseUrlForBrowser = (): string => {
+  const rawBaseUrl = process.env.NEXT_PUBLIC_HEADER_BROWSER_BASE_URL;
+  if (!rawBaseUrl) {
+    throw new Error('Header base URL was not resolved. Set HEADER_SERVER_BASE_URL.');
+  }
+  return rawBaseUrl;
 };
 
 const getHeaderBaseUrlForServer = (): string => {
@@ -46,7 +55,8 @@ const getLocaleFromRequest = (
 };
 
 export async function HeaderAssets(): Promise<JSX.Element> {
-  const headerBaseUrl = getHeaderBaseUrlForServer();
+  const headerBaseUrlBrowser = getHeaderBaseUrlForBrowser();
+  const headerBaseUrlServer = getHeaderBaseUrlForServer();
   const headersList = await headers();
   const requestUrl = getRequestUrl(headersList);
   const headerLocale = getLocaleFromRequest(headersList, requestUrl);
@@ -54,7 +64,7 @@ export async function HeaderAssets(): Promise<JSX.Element> {
   // Normally we'd just get the finished html to include in the head, but Next requires
   // RSC-compatible output -- so we'll build the html ourselves from the manifest.
   const headerAssetsManifest = await getHeaderAssetsManifest({
-    baseUrl: headerBaseUrl,
+    baseUrl: headerBaseUrlServer,
     locale: headerLocale as OptionsForGetHeaderAssetsManifest['locale'],
     onInitializationError: reportServerError,
     onUncaughtRuntimeError: reportServerError,
@@ -69,11 +79,19 @@ export async function HeaderAssets(): Promise<JSX.Element> {
     <>
       {!!js &&
         js.map((jsFile) => (
-          <link key={jsFile} rel="modulepreload" href={new URL(jsFile, headerBaseUrl).toString()} />
+          <link
+            key={jsFile}
+            rel="modulepreload"
+            href={buildUrlOrPath(headerBaseUrlBrowser, jsFile)}
+          />
         ))}
       {!!css &&
         css.map((cssFile) => (
-          <link key={cssFile} rel="stylesheet" href={new URL(cssFile, headerBaseUrl).toString()} />
+          <link
+            key={cssFile}
+            rel="stylesheet"
+            href={buildUrlOrPath(headerBaseUrlBrowser, cssFile)}
+          />
         ))}
     </>
   );

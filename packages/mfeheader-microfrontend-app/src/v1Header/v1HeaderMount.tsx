@@ -19,10 +19,8 @@ const v1Header_mountWithEntryPointValues = (
 
   return {
     setNewOptions: (newOptions) => {
-      const { newUrlPath } = newOptions;
-      if (newUrlPath != null) {
-        setUrlPath(newUrlPath);
-      }
+      const { urlPath } = newOptions;
+      setUrlPath(urlPath);
     },
     unmount() {
       root.unmount();

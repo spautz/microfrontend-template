@@ -23,7 +23,7 @@ export function HeaderClient({ rootId, locale }: HeaderClientProps): null {
   useEffect(() => {
     if (headerCallbacks.current && latestPathRef.current !== pathname) {
       latestPathRef.current = pathname;
-      headerCallbacks.current.setNewOptions({ newUrlPath: pathname });
+      headerCallbacks.current.setNewOptions({ urlPath: pathname });
     }
   }, [pathname]);
 
@@ -35,7 +35,7 @@ export function HeaderClient({ rootId, locale }: HeaderClientProps): null {
 
     let wasUnmounted = false;
 
-    void rehydrateHeader({
+    rehydrateHeader({
       baseUrl: new URL(process.env.NEXT_PUBLIC_HEADER_BROWSER_BASE_URL, window.location.origin),
       locale,
       rootElement,
@@ -50,7 +50,7 @@ export function HeaderClient({ rootId, locale }: HeaderClientProps): null {
         return;
       }
       headerCallbacks.current = result;
-      result.setNewOptions({ newUrlPath: latestPathRef.current });
+      result.setNewOptions({ urlPath: latestPathRef.current });
     });
 
     return () => {

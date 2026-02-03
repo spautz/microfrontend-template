@@ -2,6 +2,7 @@
 // See `index.ts` for resolving Javascript, for browser environments.
 
 import type { V1FetchParams } from '@spautz/mfeheader-api-contracts/v1';
+import { buildFullUrl, buildUrlOrPath } from '@spautz/mfeheader-api-contracts/v1';
 
 export * from './header/getHeaderAssetsHTML.js';
 export * from './header/getHeaderAssetsManifest.js';
@@ -12,3 +13,5 @@ export * from './header/getHeaderPrerenderHTML.js';
 type HeaderLocale = V1FetchParams['locale'];
 
 export type { HeaderLocale };
+// @TODO: move these to mfe-utils package
+export { buildUrlOrPath, buildFullUrl };

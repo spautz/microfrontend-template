@@ -29,6 +29,14 @@
 
   .navItem {
     display: inline-flex;
+
+    &.active {
+      font-weight: bold;
+    }
+  }
+
+  .active {
+    font-weight: bold;
   }
 
   .navLink {

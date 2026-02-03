@@ -1,4 +1,5 @@
 import { buildUrlOrPath } from '@spautz/mfeheader-api-contracts/v1';
+// import { useUrlPath } from '../UrlPathContext/UrlPathContext.tsx';
 import classes from './Header.module.css';
 
 interface HeaderProps {
@@ -28,7 +29,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     { label: linkLabels.water, path: '/water', baseUrl: import.meta.env.VITE_NEXTJS_APP_BASEURL },
   ];
 
-  console.log('navLinks = ', navLinks);
+  // const urlPath = useUrlPath();
 
   return (
     <header className={classes.header}>
@@ -37,7 +38,10 @@ const Header: React.FC<HeaderProps> = (props) => {
         <ul className={classes.navList}>
           {navLinks.map((link) => (
             <li key={link.path} className={classes.navItem}>
-              <a className={classes.navLink} href={buildUrlOrPath(link.baseUrl, link.path)}>
+              <a
+                className={[classes.navLink].join(' ')}
+                href={buildUrlOrPath(link.baseUrl, link.path)}
+              >
                 {link.label}
               </a>
             </li>

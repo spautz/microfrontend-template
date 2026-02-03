@@ -50,7 +50,7 @@ type V1Header_MountReturn = {
    * A function that the caller can use to update (some) options, if their values change later.
    * This could be used to pass a new urlPath.
    */
-  setNewOptions: (newOptions: { newUrlPath?: string }) => void;
+  setNewOptions: (newOptions: { urlPath?: string }) => void;
 
   /**
    * The React Root's `unmount`
@@ -94,7 +94,7 @@ const v1Header_mountOptionsExamples = [
  */
 const v1Header_mountReturnExamples = [
   {
-    setNewOptions: (_newOptions: { newUrlPath?: string }) => {},
+    setNewOptions: (_newOptions: { urlPath?: string }) => {},
     unmount: () => {},
   },
 ] as const satisfies ReadonlyArray<V1Header_MountReturn>;

@@ -193,14 +193,18 @@ const buildAssetInclude = () => ({
       await writeFile(jsonPath, `${jsonPayload}\n`, 'utf8');
 
       const headLinks = [
-        ...assets.css.map((file) => `<link rel="stylesheet" href="${file}">`),
-        ...assets.js.map((file) => `<link rel="modulepreload" href="${file}">`),
+        ...assets.css.map((file) => `<link rel="stylesheet" href="{{$BASE_URL}}/${file}">`),
+        ...assets.js.map((file) => `<link rel="modulepreload" href="{{$BASE_URL}}/${file}">`),
       ].join('\n');
       await writeFile(headHtmlPath, headLinks ? `${headLinks}\n` : '', 'utf8');
 
       const prefetchLinks = [
-        ...assets.css.map((file) => `<link rel="prefetch" as="style" href="${file}">`),
-        ...assets.js.map((file) => `<link rel="prefetch" as="script" href="${file}">`),
+        ...assets.css.map(
+          (file) => `<link rel="prefetch" as="style" href="{{$BASE_URL}}/${file}">`,
+        ),
+        ...assets.js.map(
+          (file) => `<link rel="prefetch" as="script" href="{{$BASE_URL}}/${file}">`,
+        ),
       ].join('\n');
       await writeFile(prefetchHtmlPath, prefetchLinks ? `${prefetchLinks}\n` : '', 'utf8');
     }

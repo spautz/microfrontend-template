@@ -44,7 +44,7 @@ type HISTORICAL__V1HeaderMountOptions__ORIGINAL = {
 };
 
 type HISTORICAL__V1HeaderMountReturn__ORIGINAL = {
-  setNewOptions: (newOptions: { newUrlPath?: string }) => void;
+  setNewOptions: (newOptions: { urlPath?: string }) => void;
   unmount(): void;
 };
 
@@ -72,7 +72,7 @@ const HISTORICAL__v1HeaderMount__ORIGINAL = {
   ] as const satisfies ReadonlyArray<HISTORICAL__V1HeaderMountOptions__ORIGINAL>,
   returnExamples: [
     {
-      setNewOptions: (_newOptions: { newUrlPath?: string }) => {},
+      setNewOptions: (_newOptions: { urlPath?: string }) => {},
       unmount: () => {},
     },
   ] as const satisfies ReadonlyArray<HISTORICAL__V1HeaderMountReturn__ORIGINAL>,
@@ -101,7 +101,7 @@ type HISTORICAL__V1HeaderRehydrateOptions__ORIGINAL = {
 };
 
 type HISTORICAL__V1HeaderRehydrateReturn__ORIGINAL = {
-  setNewOptions: (newOptions: { newUrlPath?: string }) => void;
+  setNewOptions: (newOptions: { urlPath?: string }) => void;
   unmount(): void;
 };
 
@@ -129,7 +129,7 @@ const HISTORICAL__v1HeaderRehydrate__ORIGINAL = {
   ] as const satisfies ReadonlyArray<HISTORICAL__V1HeaderRehydrateOptions__ORIGINAL>,
   returnExamples: [
     {
-      setNewOptions: (_newOptions: { newUrlPath?: string }) => {},
+      setNewOptions: (_newOptions: { urlPath?: string }) => {},
       unmount: () => {},
     },
   ] as const satisfies ReadonlyArray<HISTORICAL__V1HeaderRehydrateReturn__ORIGINAL>,
