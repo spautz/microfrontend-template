@@ -50,7 +50,6 @@ playwright-report/
 
 *.log
 *.tsbuildinfo
-demos/basic-tanstack-demo/src/routeTree.gen.ts
 
 .astro/
 .cache/
