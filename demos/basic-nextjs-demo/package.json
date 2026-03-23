@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@spautz/mfeheader-sdk": "workspace:^",
-    "next": "16.1.6",
+    "next": "16.1.7",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
